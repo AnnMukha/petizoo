@@ -9,9 +9,18 @@ class Core
     public $actionName;
     public $router;
     public $template;
-    private static $_instance;
+    public $db;
+    private static $instance;
+    public $session;
      private function __construct(){
         $this->template = new Template($this->defaultLayoutPath);
+        $host = Config::get()->dbHost;
+        $name = Config::get()->dbName;
+        $login = Config::get()->dbLogin;
+        $password = Config::get()->dbPassword;
+        $this->db = new DB($host, $name, $login, $password);
+        $this->session = new Session();
+        session_start();
     }
     public function run($route){
         $this->router = new \core\Router($route);
@@ -23,8 +32,8 @@ class Core
         $this->router->done();
     }
     public static function get(){
-        if(empty(self::$_instance))
-            self::$_instance = new Core();
-        return self::$_instance;
+        if(empty(self::$instance))
+            self::$instance = new Core();
+        return self::$instance;
     }
 }
