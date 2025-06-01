@@ -25,7 +25,8 @@ class Core
     public function run($route){
         $this->router = new \core\Router($route);
         $params = $this->router->run();
-        $this->template->setParams($params);
+        if (!empty($params))
+            $this->template->setParams($params);
     }
     public function done(){
         $this->template->display();

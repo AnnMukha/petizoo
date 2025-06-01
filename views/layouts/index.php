@@ -3,6 +3,8 @@
 /** @var string $Content */
 if (empty($Title))
     $Title = '';
+if (empty($Content))
+    $Content = '';
 ?>
 <!doctype html>
 <html lang="en">
@@ -38,20 +40,23 @@ if (empty($Title))
                                                                                            class="form-control"
                                                                                            placeholder="Search..."
                                                                                            aria-label="Search"></form>
-                <div class="dropdown text-end"><a href="#"
-                                                  class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                                                  data-bs-toggle="dropdown" aria-expanded="false"> <img
-                                src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
-                                class="rounded-circle">
+                <div class="dropdown text-end">
+                    <a href="#"
+                       class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php if(\models\Users::IsUserLogged()) : ?>
+                        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                        <?php endif; ?>
                     </a>
                     <ul class="dropdown-menu text-small">
                         <li><a class="dropdown-item" href="#">New project...</a></li>
                         <li><a class="dropdown-item" href="#">Settings</a></li>
                         <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <?php if(\models\Users::IsUserLogged()) : ?>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        <li><a class="dropdown-item" href="/users/logout">Logout</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
