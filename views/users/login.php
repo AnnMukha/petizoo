@@ -1,8 +1,10 @@
 <?php
+/** @var string $error_message Повідомлення про помилку*/
 $this->Title = 'Вхід на сайт';
 ?>
 <form method="post" action="">
-    <?php if (!empty($error_message)): ?>
+    <?php
+    if (!empty($error_message)): ?>
         <div class="alert alert-danger" role="alert">
             <?= $error_message ?>
         </div>
