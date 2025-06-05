@@ -14,40 +14,47 @@ class DB
             ]
         );
     }
-    protected function where($where){
-        if (is_array($where)) {
-            $where_string = "WHERE ";
+    protected function where($where) {
+        if (is_array($where) && !empty($where)) {
             $where_fields = array_keys($where);
             $parts = [];
             foreach ($where_fields as $field) {
-                $parts [] = "{$field} = :{$field}";
+                $parts[] = "{$field} = :{$field}";
             }
-            $where_string .= implode(' AND ', $parts);
-        }  else
-            if (is_string($where))
-                $where_string = $where;
-            else
-                $where_string = ' ';
-        return $where_string;
+            return "WHERE " . implode(' AND ', $parts);
+        } else if (is_string($where) && trim($where) !== '') {
+            return "WHERE " . $where;
+        } else {
+            return ""; // ПОВЕРТАЄМО ПУСТО
+        }
     }
+
     public function select($table, $fields = "*", $where = null) {
         if (is_array($fields))
             $fields_string = implode(',', $fields);
+        else if (is_string($fields))
+            $fields_string = $fields;
         else
-            if (is_string($fields))
-                $fields_string = $fields;
-            else
-                $fields_string = '*';
+            $fields_string = '*';
 
         $where_string = $this->where($where);
 
-        $sql = "SELECT {$fields_string} FROM {$table}  {$where_string}";
+        $sql = "SELECT {$fields_string} FROM {$table}";
+        if (trim($where_string) !== '') {
+            $sql .= " " . $where_string;
+        }
+
         $sth = $this->pdo->prepare($sql);
-        foreach ($where as $key => $value)
-            $sth->bindValue(":{$key}", $value);
+
+        if (is_array($where)) {
+            foreach ($where as $key => $value)
+                $sth->bindValue(":{$key}", $value);
+        }
+
         $sth->execute();
-        return $sth->FetchAll();
+        return $sth->fetchAll();
     }
+
     public function insert($table, $row_to_insert) {
         $fields_list = implode(",", array_keys($row_to_insert));
         $params_array = [];
@@ -86,5 +93,14 @@ class DB
             $sth->bindValue(":{$key}", $value);
         $sth->execute();
         return $sth->rowCount();
+    }
+    public function performQuery($sql, $params = [])
+    {
+        $sth = $this->pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            $sth->bindValue(":{$key}", $value);
+        }
+        $sth->execute();
+        return $sth->fetchAll();
     }
 }

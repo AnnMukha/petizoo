@@ -57,4 +57,9 @@ class Model
                 ]);
         }
     }
+    public static function findAll(): array
+    {
+        return \core\Core::get()->db->select(static::$tableName);
+    }
+
 }

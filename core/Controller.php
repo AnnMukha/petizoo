@@ -26,15 +26,19 @@ class Controller{
         $this->get = new Get();
         $this->errorMessages = [];
     }
-    public function render($pathToView = null): array
-    {
-        if(!empty($pathToView))
+    public function render($pathToView = null) {
+        if (!empty($pathToView)) {
+            // Якщо шлях не містить ".php", додаємо
+            if (strpos($pathToView, '.php') === false) {
+                $pathToView = 'views/' . $pathToView . '.php';
+            }
             $this->template->setTemplateFilePath($pathToView);
+        }
         return [
             'Content' => $this->template->getHTML()
         ];
     }
-    public function redirect($path): void
+    public function redirect($path) : void
     {
         header("Location: {$path}");
         die;

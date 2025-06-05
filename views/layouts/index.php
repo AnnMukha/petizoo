@@ -46,6 +46,7 @@ if (empty($Content))
         .text-teal {
             color: #38b6a3 !important;
         }
+
         /* ------------------- НАВІГАЦІЯ ------------------- */
         .navbar-nav .nav-link {
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -57,6 +58,7 @@ if (empty($Content))
             background-color: #e6f7f4;
             color: #38b6a3;
         }
+
         /* ------------------- DROPDOWN ------------------- */
         @media (min-width: 992px) {
             .navbar .dropdown:hover .dropdown-menu {
@@ -78,6 +80,7 @@ if (empty($Content))
             background-color: white;
             z-index: 1000;
         }
+
         /* ------------------- ПІДКАТЕГОРІЇ ------------------- */
         .dropdown-menu ul li a {
             display: block;
@@ -99,6 +102,9 @@ if (empty($Content))
                 visibility: visible;
                 transform: translateY(0);
             }
+        }
+        .badge {
+            padding: 2px 6px;
         }
     </style>
 </head>
@@ -321,8 +327,13 @@ if (empty($Content))
                        aria-label="Search"/>
                 <button class="btn btn-outline-success btn-sm" type="submit">🔍</button>
             </form>
-            <a href="/cart" class="btn btn-outline-secondary btn-sm me-2">
-                <i class="bi bi-cart3"></i> Кошик
+            <a href="/cart/index" class="btn btn-outline-secondary btn-sm position-relative me-2">
+                <i class="bi bi-cart2 me-1"></i> Кошик
+                <?php if (($count = $_SESSION['cart_count'] ?? 0) > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 11px;">
+            <?= $count ?>
+        </span>
+                <?php endif; ?>
             </a>
             <?php if (!\models\Users::IsUserLogged()) : ?>
                 <a href="/users/login" class="btn btn-outline-primary btn-sm me-2">Увійти</a>

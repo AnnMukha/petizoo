@@ -46,4 +46,9 @@ class Users extends Model
         $user->firstname = $firstname;
         $user->save();
     }
+    public static function GetCurrentAuthenticatedUser()
+    {
+        return $_SESSION['user'] ?? null;
+    }
+
 }
