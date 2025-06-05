@@ -1,0 +1,180 @@
+/* === Кошик - стилізація під Petizoo === */
+.table-cart {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 20px;
+    background-color: #ffffff;
+    overflow: hidden;
+    border: 1px solid #d4f3ec;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.table-cart thead {
+    background-color: #e6f7f4;
+    color: #00695c;
+    font-weight: bold;
+}
+
+.table-cart th, .table-cart td {
+    padding: 16px 12px;
+    font-size: 15px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #e0f0eb;
+}
+
+.table-cart td img {
+    border-radius: 8px;
+    max-height: 70px;
+    object-fit: contain;
+}
+
+/* Кількість */
+.input-quantity {
+    width: 70px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    font-weight: bold;
+    background-color: #fefefe;
+    transition: border-color 0.2s ease;
+}
+
+.input-quantity:focus {
+    outline: none;
+    border-color: #20c997;
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.2);
+}
+
+.stock-note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Кнопки */
+.btn-sm {
+    font-size: 14px;
+    padding: 5px 12px;
+    border-radius: 8px;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    border: none;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-success {
+    background-color: #20c997;
+    border: none;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-success:hover {
+    background-color: #17a88b;
+}
+
+.btn-outline-primary {
+    border: 1px solid #20c997;
+    color: #20c997;
+    background-color: white;
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+    background-color: #20c997;
+    color: white;
+}
+
+.alert-warning {
+    border-radius: 12px;
+    border: 1px solid #ffeeba;
+    background-color: #fff8e1;
+    font-size: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(255, 215, 0, 0.1);
+}
+
+.update-btn {
+    border-radius: 12px;
+    padding: 8px 18px;
+    border: 1px solid #20c997;
+    background-color: white;
+    color: #20c997;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.update-btn:hover {
+    background-color: #20c997;
+    color: white;
+}
+
+/* Загальна сума */
+.total-cell {
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+}
+.cart-title {
+    font-size: 2rem; /* 🔽 трохи менше */
+    font-weight: 700;
+    color: #20c997;
+    background: linear-gradient(to right, #e6f7f4, #ffffff);
+    padding: 16px 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(32, 201, 151, 0.15);
+    border: 2px dashed #20c997;
+    margin: 0 auto 30px;
+    animation: fadeIn 0.6s ease-in-out;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Контейнер для центрування */
+.cart-title-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.discount-alert {
+    background-color: #fff8e6;
+    border-left: 6px solid #ffc107;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(255, 193, 7, 0.1);
+    font-size: 16px;
+    color: #6c5d2c;
+    position: relative;
+}
+
+.discount-alert::before {
+    font-size: 24px;
+    position: absolute;
+    top: 18px;
+    left: 20px;
+}
+
+.discount-alert .text {
+    margin-left: 36px;
+}
+
+.discount-alert strong {
+    color: #d35400;
+    font-weight: bold;
+}
+
+.discount-alert .btn {
+    margin-top: 10px;
+}

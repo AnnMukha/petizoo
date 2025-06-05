@@ -37,6 +37,8 @@ class Users extends Model
     }
     public static function LogoutUser() {
         Core::get()->session->remove('user');
+        unset($_SESSION['cart']);
+        unset($_SESSION['cart_count']);
     }
     public static function RegisterUser($login, $password, $lastname, $firstname) {
         $user = new Users();

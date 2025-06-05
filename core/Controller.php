@@ -45,8 +45,7 @@ class Controller{
     }
     public function addErrorMessage($message = null): void
     {
-        $this->errorMessages [] = $message;
-        $this->template->setParam('error_message', implode('<br/>', $this->errorMessages));
+        $_SESSION['error_messages'][] = $message;
     }
     public function clearErrorMessage(): void
     {

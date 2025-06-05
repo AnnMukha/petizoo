@@ -52,6 +52,8 @@ class UsersController extends Controller
     }
     public function actionLogout() {
         Users::LogoutUser();
+        unset($_SESSION['cart']);
+        unset($_SESSION['cart_count']); // 🔥 Скидаємо лічильник кошика
         return $this->redirect('/users/login');
     }
 }

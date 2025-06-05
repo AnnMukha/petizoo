@@ -327,10 +327,10 @@ if (empty($Content))
                        aria-label="Search"/>
                 <button class="btn btn-outline-success btn-sm" type="submit">🔍</button>
             </form>
-            <a href="/cart/index" class="btn btn-outline-secondary btn-sm position-relative me-2">
-                <i class="bi bi-cart2 me-1"></i> Кошик
+            <a href="/cart/index" class="btn btn-outline-secondary position-relative btn-sm me-2">
+                <i class="bi bi-cart2"></i> Кошик
                 <?php if (($count = $_SESSION['cart_count'] ?? 0) > 0): ?>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 11px;">
+                    <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             <?= $count ?>
         </span>
                 <?php endif; ?>

@@ -50,9 +50,11 @@
                     <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center px-3 pb-3">
                         <span class="fw-bold text-teal fs-5"><?= number_format($product['price'], 2) ?> грн</span>
                         <div class="d-flex gap-3">
-                            <button class="btn btn-outline-teal w-60 add-to-cart" data-id="<?= $product['id'] ?>">
-                                <i class="bi bi-cart-plus me-1"></i> У кошик
-                            </button>
+                            <a href="/cart/ajaxadd/<?= $product['id'] ?>"
+                               class="btn btn-outline-teal btn-icon shadow-sm btn-add-to-cart"
+                               data-id="<?= $product['id'] ?>" title="Додати до кошика">
+                                <i class="bi bi-cart-plus fs-5"></i>
+                            </a>
                             <button class="btn btn-outline-danger btn-icon shadow-sm" title="У вибране">
                                 <i class="bi bi-heart fs-5"></i>
                             </button>
@@ -66,14 +68,33 @@
     <?php endif; ?>
 </div>
 <script>
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function () {
-            const id = this.dataset.id;
-            fetch(`/cart/ajaxAdd/${id}`)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('cart-count').textContent = data.count;
-                });
+    document.addEventListener('DOMContentLoaded', function () {
+        const buttons = document.querySelectorAll('.btn-add-to-cart');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const url = this.href;
+
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            let badge = document.getElementById('cart-badge');
+                            if (!badge) {
+                                const cartBtn = document.querySelector('a[href="/cart/index"]');
+                                if (cartBtn) {
+                                    badge = document.createElement('span');
+                                    badge.id = 'cart-badge';
+                                    badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+                                    cartBtn.appendChild(badge);
+                                }
+                            }
+                            if (badge) {
+                                badge.textContent = data.count;
+                            }
+                        }
+                    });
+            });
         });
     });
 </script>
