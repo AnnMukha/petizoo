@@ -47,7 +47,7 @@ class CartController extends Controller
             $_SESSION['cart_count'] = array_sum($_SESSION['cart']);
         }
 
-        return $this->redirect('/cart/index');
+        return $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
     }
 
     public function actionRemove($params)
@@ -289,5 +289,4 @@ class CartController extends Controller
 
         return $this->redirect('/cart/index#cart');
     }
-
 }

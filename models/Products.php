@@ -27,4 +27,9 @@ class Products extends Model
             return Core::get()->db->select(self::$tableName); // всі
         }
     }
+    public static function getTopPopular($limit = 4)
+    {
+        $query = "SELECT * FROM " . self::$tableName . " ORDER BY stock DESC LIMIT $limit";
+        return \core\Core::get()->db->performQuery($query);
+    }
 }

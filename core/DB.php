@@ -67,7 +67,9 @@ class DB
         foreach ($row_to_insert as $key => $value)
             $sth->bindValue(":{$key}", $value);
         $sth->execute();
-        return $sth->rowCount();
+
+        // ✨ Ось це потрібно додати:
+        return $this->pdo->lastInsertId();
     }
     public function delete($table, $where) {
         $where_string = $this->where($where);
@@ -103,4 +105,8 @@ class DB
         $sth->execute();
         return $sth->fetchAll();
     }
+    public function lastInsertId() {
+        return $this->pdo->lastInsertId();
+    }
+
 }

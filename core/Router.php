@@ -5,39 +5,45 @@ namespace core;
 class Router
 {
     protected $route;
+
     public function __construct($route)
     {
         $this->route = $route;
     }
-    public function run(){
-        $parts = explode('/', $this->route);
-        if(strlen($parts[0]) == 0) {
+
+    public function run()
+    {
+        $parts = explode('/', trim($this->route, '/'));
+
+        if (empty($parts[0])) {
             $parts[0] = 'site';
             $parts[1] = 'index';
-        }
-        if (count($parts) == 1)
+        } elseif (!isset($parts[1])) {
             $parts[1] = 'index';
+        }
+
         \core\Core::get()->moduleName = $parts[0];
         \core\Core::get()->actionName = $parts[1];
-        $controller = 'controllers\\'.ucfirst($parts[0]).'Controller';
-        $method = 'action'.ucfirst($parts[1]);
-        if(class_exists($controller)) {
-            $controllerObject = new $controller();
-            Core::get()->controllerObject = $controllerObject;
-            if(method_exists($controller, $method)) {
-                array_splice($parts,0,2);
-                return $controllerObject->$method($parts);
-            }
-            else
-                $this->error(404);
-        } else
-            $this->error(404);
-        // !!! return
-    }
-    public function done(){
 
+        $controller = 'controllers\\' . ucfirst($parts[0]) . 'Controller';
+        $method = 'action' . ucfirst($parts[1]);
+
+        if (class_exists($controller)) {
+            $controllerObject = new $controller();
+            \core\Core::get()->controllerObject = $controllerObject;
+            if (method_exists($controllerObject, $method)) {
+                $params = array_slice($parts, 2);
+                return $controllerObject->$method($params);
+            } else {
+                $this->error(404);
+            }
+        } else {
+            $this->error(404);
+        }
     }
-    public function error($code) {
+
+    public function error($code)
+    {
         http_response_code($code);
         switch ($code) {
             case '404':
@@ -45,4 +51,9 @@ class Router
                 break;
         }
     }
+    public function done()
+    {
+        // Placeholder for future post-processing if needed
+    }
+
 }

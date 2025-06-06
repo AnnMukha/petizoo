@@ -62,9 +62,7 @@ $this->Title = '' ;
         .shadow-sm {
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
-        .bg-white {
-            background-color: #fff;
-        }
+
         ul li {
             margin-bottom: 8px;
         }
@@ -263,6 +261,87 @@ $this->Title = '' ;
             background-color: #fff8ec;
             border-left-color: #f4b400;
         }
+        .product-img {
+            height: 160px;
+            width: 100%;
+            object-fit: contain;
+            background-color: #f6f6f6;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .btn-outline-teal {
+            color: #38b6a3;
+            border: 2px solid #38b6a3;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-teal:hover {
+            background-color: #38b6a3;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(56, 182, 163, 0.15);
+        }
+        .product-tile {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 100%;
+            padding: 20px 15px;
+            min-width: 230px;
+        }
+
+        .product-tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-tile h6 {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: #333;
+            height: 38px;
+            overflow: hidden;
+            line-height: 1.2;
+        }
+
+        .product-tile p {
+            font-size: 15px;
+            color: #38b6a3;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .product-img {
+            height: 160px;
+            width: 100%;
+            object-fit: contain;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1c1c1c;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: "";
+            width: 60px;
+            height: 4px;
+            background: #38b6a3;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
@@ -289,6 +368,7 @@ $this->Title = '' ;
     </div>
 </div>
 <!-- БЛОК СТАНЬ СВОЇМ -->
+<?php if (!\models\Users::IsUserLogged()): ?>
 <div class="register-banner d-flex align-items-center justify-content-between flex-wrap p-4 rounded-4 shadow-sm my-4" style="background-color: #fff7f3;">
     <div class="d-flex align-items-center flex-wrap">
         <div class="icon-circle me-3">🙌</div>
@@ -303,11 +383,11 @@ $this->Title = '' ;
         🎁 Хочу знижку!
     </a>
 </div>
-
+<?php endif; ?>
 <!-- Категорії -->
 <section class="container my-5">
     <div class="text-center mb-4">
-        <h2 class="fw-bold">Популярне для улюбленців</h2>
+        <h2 class="section-title">Популярне для улюбленців</h2>
         <p class="text-muted">Оберіть основну категорію — і вперед за покупками!</p>
     </div>
 
@@ -359,39 +439,36 @@ $this->Title = '' ;
 
 <!-- Популярні товари -->
 <section class="container my-0">
-    <h3 class="text-center fw-bold mb-4">Популярні товари</h3>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    <h3 class="section-title">Популярні товари</h3>
 
-        <!-- Товар 1 -->
-        <div class="col">
-            <div class="product-tile p-3">
-                <img src="/public/img/f1.webp" class="img-fluid product-img" alt="Корм для котів">
-                <h6 class="mt-3 fw-semibold">Корм для котів Optimeal</h6>
-                <p class="text-teal fw-bold mb-2">199 грн</p>
-                <button class="btn btn-petizoo w-100">
-                    <i class="bi bi-cart"></i> До кошика
-                </button>
-            </div>
-        </div>
+    <div class="popular-scroll d-flex overflow-auto pb-3 gap-4">
+        <?php if (!empty($popular)): ?>
+            <?php foreach ($popular as $item): ?>
+                <div class="product-tile p-3 flex-shrink-0" style="width: 250px;">
+                    <img src="<?= htmlspecialchars($item['image']) ?>" class="img-fluid product-img" alt="<?= htmlspecialchars($item['name']) ?>">
+                    <h6 class="mt-3 fw-semibold"><?= htmlspecialchars($item['name']) ?></h6>
+                    <p class="text-teal fw-bold mb-2"><?= htmlspecialchars($item['price']) ?> грн</p>
+                    <button type="button" class="btn btn-petizoo w-100 add-to-cart" data-id="<?= (int)$item['id'] ?>">
+                        <i class="bi bi-cart"></i> До кошика
+                    </button>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-center text-muted">Наразі немає популярних товарів</p>
+        <?php endif; ?>
+    </div>
 
-        <!-- Товар 2 -->
-        <div class="col">
-            <div class="product-tile p-3">
-                <img src="/public/img/dog-treat.jpg" class="img-fluid product-img" alt="Ласощі для собак">
-                <h6 class="mt-3 fw-semibold">Ласощі для собак Brit</h6>
-                <p class="text-teal fw-bold mb-2">85 грн</p>
-                <button class="btn btn-petizoo w-100">
-                    <i class="bi bi-cart"></i> До кошика
-                </button>
-            </div>
-        </div>
-
+    <!-- Кнопка до каталогу -->
+    <div class="text-center mt-4">
+        <a href="/products/index" class="btn btn-outline-teal rounded-pill px-5 py-2 fw-semibold shadow-sm">
+            <i class="bi bi-grid-3x3-gap me-1"></i> Переглянути весь каталог
+        </a>
     </div>
 </section>
 
 <!-- Переваги -->
 <section class="container mt-4 mb-5 features-section">
-    <h3 class="text-center mb-4 fw-bold">Чому Petizoo?</h3>
+    <h3 class="section-title">Чому Petizoo?</h3>
     <div class="row text-center g-4">
         <div class="col-md-4">
             <div class="feature-box bg-delivery">
@@ -416,5 +493,39 @@ $this->Title = '' ;
         </div>
     </div>
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".add-to-cart");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const productId = this.dataset.id;
+
+                fetch(`/cart/ajaxadd/${productId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const badge = document.querySelector('#cart-badge');
+                            if (badge) {
+                                badge.textContent = data.count;
+                                badge.classList.remove("d-none");
+                            }
+
+                            this.classList.remove("btn-petizoo");
+                            this.classList.add("btn-success");
+                            this.innerHTML = "✅ Додано!";
+                            setTimeout(() => {
+                                this.classList.remove("btn-success");
+                                this.classList.add("btn-petizoo");
+                                this.innerHTML = '<i class="bi bi-cart"></i> До кошика';
+                            }, 1500);
+                        } else {
+                            alert("Не вдалося додати товар");
+                        }
+                    });
+            });
+        });
+    });
+</script>
 </body>
 </html>

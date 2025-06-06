@@ -26,13 +26,16 @@ class Controller{
         $this->get = new Get();
         $this->errorMessages = [];
     }
-    public function render($pathToView = null) {
-        if (!empty($pathToView)) {
-            // Якщо шлях не містить ".php", додаємо
-            if (strpos($pathToView, '.php') === false) {
-                $pathToView = 'views/' . $pathToView . '.php';
+    public function render($params = null) {
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $this->template->setParam($key, $value);
             }
-            $this->template->setTemplateFilePath($pathToView);
+        } elseif (!empty($params) && is_string($params)) {
+            if (strpos($params, '.php') === false) {
+                $params = 'views/' . $params . '.php';
+            }
+            $this->template->setTemplateFilePath($params);
         }
         return [
             'Content' => $this->template->getHTML()
