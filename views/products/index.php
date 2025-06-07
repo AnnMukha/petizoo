@@ -55,9 +55,25 @@
                                data-id="<?= $product['id'] ?>" title="Додати до кошика">
                                 <i class="bi bi-cart-plus fs-5"></i>
                             </a>
-                            <button class="btn btn-outline-danger btn-icon shadow-sm" title="У вибране">
-                                <i class="bi bi-heart fs-5"></i>
-                            </button>
+                            <!-- У каталозі: -->
+                            <?php if (\models\Users::IsUserLogged()): ?>
+                                <?php
+                                $isFavorite = \core\Core::get()->db->select('favorites', '*', [
+                                    'user_id' => $_SESSION['user']['id'],
+                                    'product_id' => $product['id']
+                                ]);
+                                ?>
+                                <button class="btn btn-outline-danger btn-icon shadow-sm toggle-favorite"
+                                        data-product-id="<?= $product['id'] ?>"
+                                        title="У вибране">
+                                    <i class="bi <?= $isFavorite ? 'bi-heart-fill text-danger' : 'bi-heart' ?> fs-5"></i>
+                                </button>
+                            <?php else: ?>
+                                <button onclick="alert('Доступно лише для авторизованих користувачів!')"
+                                        class="btn btn-outline-danger btn-icon shadow-sm" title="У вибране">
+                                    <i class="bi bi-heart fs-5"></i>
+                                </button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -95,6 +111,31 @@
                         }
                     });
             });
+        });
+    });
+    document.querySelectorAll('.toggle-favorite').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const productId = this.dataset.productId;
+            const icon = this.querySelector('i');
+
+            fetch('/products/favoriteajax', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'product_id=' + productId
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'added') {
+                        icon.classList.remove('bi-heart');
+                        icon.classList.add('bi-heart-fill', 'text-danger');
+                    } else if (data.status === 'removed') {
+                        icon.classList.remove('bi-heart-fill', 'text-danger');
+                        icon.classList.add('bi-heart');
+                    }
+                });
         });
     });
 </script>
@@ -163,6 +204,20 @@
     .btn-outline-danger:hover {
         background-color: #dc3545;
         color: white;
+    }
+    .btn-icon {
+        width: 42px;
+        height: 42px;
+        padding: 6px;
+        font-size: 1.25rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .btn-icon i.bi-heart-fill {
+        color: red;
     }
 </style>
 

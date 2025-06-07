@@ -143,4 +143,5 @@ class ProfileController extends Controller
             'success' => $success
         ]);
     }
+
 }

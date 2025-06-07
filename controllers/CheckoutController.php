@@ -116,14 +116,15 @@ class CheckoutController extends Controller
         }
 
         // 1. Insert order
-        Core::get()->db->insert('orders', [
+        $orderId = Core::get()->db->insert('orders', [
             'user_id' => $userId,
             'full_name' => $fullName,
             'phone' => $phone,
             'address' => $address,
-            'total_price' => $total
+            'total_price' => $total,
+            'status' => 'Опрацьовується', // обов’язково для роботи скасування
+            'created_at' => date('Y-m-d H:i:s') // можеш видалити, якщо поле має DEFAULT CURRENT_TIMESTAMP
         ]);
-        $orderId = Core::get()->db->pdo->lastInsertId();
 
         // 2. Insert order_items
         foreach ($items as $item) {

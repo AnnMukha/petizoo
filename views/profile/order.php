@@ -3,48 +3,67 @@
 /** @var array $items */
 ?>
 <div class="container my-5">
-    <h2 class="mb-4 text-teal">
-        <i class="bi bi-receipt-cutoff me-2"></i>
-        Деталі замовлення №<?= $order['id'] ?> від <?= date('d.m.Y H:i', strtotime($order['created_at'])) ?>
-    </h2>
+    <div class="mb-4">
+        <h3 class="fw-bold text-teal">
+            <i class="bi bi-bag-check me-2"></i>Деталі замовлення №<?= $order['id'] ?> від <?= date('d.m.Y H:i', strtotime($order['created_at'])) ?>
+        </h3>
+    </div>
 
     <div class="row g-4">
-        <!-- Лівий блок з інформацією -->
-        <div class="col-md-5">
-            <div class="bg-light border rounded p-4 shadow-sm">
-                <h5 class="mb-3 text-teal"><i class="bi bi-info-circle me-2"></i>Інформація</h5>
-                <ul class="list-unstyled">
-                    <li><strong>Ім’я отримувача:</strong> <?= htmlspecialchars($order['full_name']) ?></li>
-                    <li><strong>Телефон:</strong> <?= htmlspecialchars($order['phone']) ?></li>
-                    <li><strong>Адреса доставки:</strong> <?= htmlspecialchars($order['address']) ?></li>
-                    <li><strong>Статус:</strong> <span class="badge bg-success">Опрацьовується</span></li>
-                    <li><strong>Сума замовлення:</strong> <?= number_format($order['total_price'], 2) ?> грн</li>
-                </ul>
+        <!-- Інформація про замовлення -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-teal"><i class="bi bi-person-vcard me-2"></i>Отримувач</h5>
+                    <p class="mb-1"><strong>Ім’я:</strong> <?= htmlspecialchars($order['full_name']) ?></p>
+                    <p class="mb-1"><strong>Телефон:</strong> <?= htmlspecialchars($order['phone']) ?></p>
+                    <p class="mb-1"><strong>Адреса:</strong> <?= htmlspecialchars($order['address']) ?></p>
+                    <p class="mb-1"><strong>Статус:</strong> <span class="badge bg-success">Опрацьовується</span></p>
+                    <p class="mb-0"><strong>Сума:</strong> <?= number_format($order['total_price'], 2) ?> грн</p>
+                </div>
             </div>
         </div>
 
-        <!-- Правий блок зі списком товарів -->
-        <div class="col-md-7">
-            <div class="bg-white border rounded p-4 shadow-sm">
-                <h5 class="mb-3 text-teal"><i class="bi bi-box-seam me-2"></i>Товари</h5>
-                <?php foreach ($items as $item): ?>
-                    <div class="d-flex align-items-center border-bottom py-3 gap-3">
-                        <img src="/<?= ltrim($item['image'], '/') ?>" width="80" class="rounded shadow-sm" alt="">
-                        <div class="flex-grow-1">
-                            <div class="fw-bold"><?= htmlspecialchars($item['name']) ?></div>
-                            <div class="small text-muted">Ціна: <?= number_format($item['price'], 2) ?> грн</div>
-                            <div class="small text-muted">Кількість: <?= $item['quantity'] ?></div>
+        <!-- Список товарів -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-teal"><i class="bi bi-box-seam me-2"></i>Товари</h5>
+
+                    <?php foreach ($items as $item): ?>
+                        <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                            <img src="/<?= ltrim($item['image'], '/') ?>" width="80" class="rounded me-3 shadow-sm" alt="">
+                            <div class="flex-grow-1">
+                                <div class="fw-bold"><?= htmlspecialchars($item['name']) ?></div>
+                                <div class="text-muted small">Ціна: <?= number_format($item['price'], 2) ?> грн</div>
+                                <div class="text-muted small">Кількість: <?= $item['quantity'] ?></div>
+                            </div>
+                            <div class="fw-bold text-end"><?= number_format($item['price'] * $item['quantity'], 2) ?> грн</div>
                         </div>
-                        <div class="text-end fw-bold"><?= number_format($item['price'] * $item['quantity'], 2) ?> грн</div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+
+                </div>
             </div>
         </div>
     </div>
-
+    <div class="mt-4 border-top pt-3">
+        <h5 class="text-teal mb-2"><i class="bi bi-tags"></i> Застосована знижка</h5>
+        <p>На ваше замовлення була застосована <strong>персональна знижка 5%</strong> за реєстрацію користувача.</p>
+        <p>Ваша економія склала:
+            <strong><?= number_format($order['original_price'] - $order['total_price'], 2) ?> грн</strong>
+        </p>
+        <p class="mb-0">Загальна сума зі знижкою:
+            <strong><?= number_format($order['total_price'], 2) ?> грн</strong>
+        </p>
+    </div>
     <div class="mt-4">
         <a href="/profile/orders" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Назад до списку замовлень
+            <i class="bi bi-arrow-left-circle"></i> Назад до списку замовлень
         </a>
     </div>
 </div>
+<style>
+    .text-teal {
+        color: #20c997;
+    }
+</style>
