@@ -31,8 +31,15 @@ class Router
         if (class_exists($controller)) {
             $controllerObject = new $controller();
             \core\Core::get()->controllerObject = $controllerObject;
+
+            $params = array_slice($parts, 2);
+
+            // ✅ Підтримка id з URL: /profile/order/6
+            if (!empty($params) && !isset($_GET['id'])) {
+                $_GET['id'] = $params[0];
+            }
+
             if (method_exists($controllerObject, $method)) {
-                $params = array_slice($parts, 2);
                 return $controllerObject->$method($params);
             } else {
                 $this->error(404);
@@ -51,9 +58,9 @@ class Router
                 break;
         }
     }
+
     public function done()
     {
-        // Placeholder for future post-processing if needed
+        // Placeholder
     }
-
 }

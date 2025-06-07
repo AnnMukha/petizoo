@@ -53,4 +53,17 @@ class Users extends Model
         return $_SESSION['user'] ?? null;
     }
 
+    public static function GetCurrentUser()
+    {
+        if (!self::IsUserLogged())
+            return null;
+
+        $userId = $_SESSION['user']['id'];
+        return self::findById($userId);
+    }
+    public static function findById($id)
+    {
+        return self::findByCondition(['id' => $id])[0] ?? null;
+    }
+
 }
