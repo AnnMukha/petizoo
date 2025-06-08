@@ -21,9 +21,8 @@
         <select name="category" class="form-select d-inline w-auto">
             <option value="all" <?= ($category ?? '') === 'all' ? 'selected' : '' ?>>Усі</option>
             <?php foreach ($categories as $subcategory): ?>
-                <option value="<?= $subcategory['id'] ?>" <?= ($category ?? '') == $subcategory['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($subcategory['name']) ?>
-                </option>
+                <option value="<?= $subcategory['id'] ?>" <?= ($category ?? '') == $subcategory['id'] ? 'selected' : '' ?>
+                ><?= htmlspecialchars($subcategory['name']) ?></option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -38,15 +37,15 @@
         <?php foreach ($products as $product): ?>
             <div class="col">
                 <div class="card product-card h-100 shadow-sm rounded-4 position-relative">
-                    <div class="product-img-wrapper bg-light d-flex align-items-center justify-content-center p-4">
-                        <img src="/<?= ltrim($product['image'], '/') ?>"
-                             class="card-img-top img-fluid"
-                             alt="<?= htmlspecialchars($product['name']) ?>">
-                    </div>
-                    <div class="card-body text-center px-3 py-2">
-                        <h5 class="card-title fw-bold text-dark"><?= htmlspecialchars($product['name']) ?></h5>
-                        <p class="card-text small text-muted"><?= htmlspecialchars($product['description']) ?></p>
-                    </div>
+                    <a href="/products/view/<?= $product['id'] ?>" class="text-decoration-none text-dark">
+                        <div class="product-img-wrapper bg-light d-flex align-items-center justify-content-center p-4">
+                            <img src="/<?= ltrim($product['image'], '/') ?>" class="card-img-top img-fluid" alt="<?= htmlspecialchars($product['name']) ?>">
+                        </div>
+                        <div class="card-body text-center px-3 py-2">
+                            <h5 class="card-title fw-bold text-dark"><?= htmlspecialchars($product['name']) ?></h5>
+                            <p class="card-text small text-muted"><?= htmlspecialchars($product['description']) ?></p>
+                        </div>
+                    </a>
                     <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center px-3 pb-3">
                         <span class="fw-bold text-teal fs-5"><?= number_format($product['price'], 2) ?> грн</span>
                         <div class="d-flex gap-3">
@@ -55,7 +54,6 @@
                                data-id="<?= $product['id'] ?>" title="Додати до кошика">
                                 <i class="bi bi-cart-plus fs-5"></i>
                             </a>
-                            <!-- У каталозі: -->
                             <?php if (\models\Users::IsUserLogged()): ?>
                                 <?php
                                 $isFavorite = \core\Core::get()->db->select('favorites', '*', [
@@ -64,15 +62,16 @@
                                 ]);
                                 ?>
                                 <button class="btn btn-outline-danger btn-icon shadow-sm toggle-favorite"
-                                        data-product-id="<?= $product['id'] ?>"
-                                        title="У вибране">
+                                        data-product-id="<?= $product['id'] ?>" title="У вибране">
                                     <i class="bi <?= $isFavorite ? 'bi-heart-fill text-danger' : 'bi-heart' ?> fs-5"></i>
                                 </button>
                             <?php else: ?>
-                                <button onclick="alert('Доступно лише для авторизованих користувачів!')"
-                                        class="btn btn-outline-danger btn-icon shadow-sm" title="У вибране">
-                                    <i class="bi bi-heart fs-5"></i>
-                                </button>
+                                <div class="position-relative">
+                                    <button class="btn btn-outline-danger btn-icon shadow-sm btn-disabled-tooltip"
+                                            data-tooltip="Увійдіть до акаунта, щоб додати в улюблене">
+                                        <i class="bi bi-heart fs-5"></i>
+                                    </button>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -218,6 +217,37 @@
     }
     .btn-icon i.bi-heart-fill {
         color: red;
+    }
+    .btn-disabled-tooltip {
+        position: relative;
+        opacity: 1;
+        cursor: not-allowed;
+        border: 1px solid #dc3545 !important; /* Яскрава рамка */
+        background-color: transparent;
+        pointer-events: auto;
+    }
+
+    .btn-disabled-tooltip::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -36px; /* Відступ вниз */
+        right: -10px;  /* Відступ справа */
+        background-color: #f8d7da;
+        color: #721c24;
+        font-size: 13px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(5px);
+        transition: all 0.2s ease, transform 0.2s ease;
+        z-index: 9999;
+    }
+
+    .btn-disabled-tooltip:hover::after {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 

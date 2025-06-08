@@ -29,11 +29,16 @@ class Users extends Model
         else
             return null;
     }
-    public static function IsUserLogged() {
+    public static function IsUserLogged() : bool
+    {
         return !empty(Core::get()->session->get('user'));
     }
     public static function LoginUser($user) {
-        Core::get()->session->set('user', $user);
+        Core::get()->session->set('user', [
+            'id' => $user['id'],
+            'login' => $user['login'],
+            'is_admin' => $user['is_admin'] ?? 0
+        ]);
     }
     public static function LogoutUser() {
         Core::get()->session->remove('user');
@@ -65,5 +70,8 @@ class Users extends Model
     {
         return self::findByCondition(['id' => $id])[0] ?? null;
     }
-
+    public static function IsAdmin(): bool
+    {
+        return isset($_SESSION['user']) && $_SESSION['user']['is_admin'] == 1;
+    }
 }

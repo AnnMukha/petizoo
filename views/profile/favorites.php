@@ -1,4 +1,4 @@
-<?php /** @var array $favorites */ ?>
+<?php /** @var array $favorites */?>
 
 <h2 class="text-center my-4 fw-bold text-dark display-5">Улюблені товари</h2>
 

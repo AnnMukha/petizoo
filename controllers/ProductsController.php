@@ -23,8 +23,8 @@ class ProductsController extends Controller
             $conditions['subcategory_id'] = $category;
         }
 
-        $products = \core\Core::get()->db->select('products', '*', $conditions);
-        $subcategories = \core\Core::get()->db->select('subcategories');
+        $products = Core::get()->db->select('products', '*', $conditions);
+        $subcategories = Core::get()->db->select('subcategories');
 
         $this->template->setParams([
             'products' => $products,
@@ -35,6 +35,7 @@ class ProductsController extends Controller
 
         return $this->render('products/index');
     }
+
     public function actionFavorite()
     {
         if (!\models\Users::IsUserLogged()) {
@@ -48,18 +49,18 @@ class ProductsController extends Controller
             return $this->redirect('/');
         }
 
-        $existing = \core\Core::get()->db->select('favorites', '*', [
+        $existing = Core::get()->db->select('favorites', '*', [
             'user_id' => $user['id'],
             'product_id' => $productId
         ]);
 
         if (empty($existing)) {
-            \core\Core::get()->db->insert('favorites', [
+            Core::get()->db->insert('favorites', [
                 'user_id' => $user['id'],
                 'product_id' => $productId
             ]);
         } else {
-            \core\Core::get()->db->delete('favorites', [
+            Core::get()->db->delete('favorites', [
                 'user_id' => $user['id'],
                 'product_id' => $productId
             ]);
@@ -67,6 +68,7 @@ class ProductsController extends Controller
 
         return $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
     }
+
     public function actionFavoriteajax()
     {
         if (!\models\Users::IsUserLogged()) {
@@ -75,26 +77,26 @@ class ProductsController extends Controller
         }
 
         $userId = $_SESSION['user']['id'];
-        $productId = $_POST['product_id'] ?? null;
+        $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
 
-        if (!$productId) {
+        if ($productId <= 0) {
             echo json_encode(['status' => 'error']);
             exit;
         }
 
-        $exists = \core\Core::get()->db->select('favorites', '*', [
+        $exists = Core::get()->db->select('favorites', '*', [
             'user_id' => $userId,
             'product_id' => $productId
         ]);
 
         if (empty($exists)) {
-            \core\Core::get()->db->insert('favorites', [
+            Core::get()->db->insert('favorites', [
                 'user_id' => $userId,
                 'product_id' => $productId
             ]);
             echo json_encode(['status' => 'added']);
         } else {
-            \core\Core::get()->db->delete('favorites', [
+            Core::get()->db->delete('favorites', [
                 'user_id' => $userId,
                 'product_id' => $productId
             ]);
@@ -103,5 +105,30 @@ class ProductsController extends Controller
 
         exit;
     }
-}
 
+    public function actionView($params)
+    {
+        $productId = isset($params[0]) ? (int)$params[0] : 0;
+
+        if ($productId <= 0) {
+            return $this->redirect('/products');
+        }
+
+        $result = Core::get()->db->select('products', '*', [
+            'id' => $productId
+        ]);
+
+        $product = !empty($result) ? $result[0] : null;
+
+        if (!$product) {
+            http_response_code(404);
+            return $this->render('site/404');
+        }
+
+        $this->template->setParams([
+            'product' => $product
+        ]);
+
+        return $this->render('products/view');
+    }
+}
