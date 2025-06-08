@@ -12,5 +12,9 @@ class Subcategory extends Model
     {
         return self::findAll();
     }
-}
 
+    public static function getById($id)
+    {
+        return self::findByID($id);
+    }
+}

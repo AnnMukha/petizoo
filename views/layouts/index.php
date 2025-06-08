@@ -103,8 +103,21 @@ if (empty($Content))
                 transform: translateY(0);
             }
         }
+
         .badge {
             padding: 2px 6px;
+        }
+        .dropdown-toggle span {
+            font-size: 15px;
+            color: #333;
+        }
+
+        .dropdown-toggle:hover span {
+            color: #20c997;
+        }
+
+        .dropdown-menu i {
+            width: 20px;
         }
     </style>
 </head>
@@ -324,14 +337,16 @@ if (empty($Content))
             </ul>
 
             <form class="d-flex me-3" role="search">
-                <input class="form-control form-control-sm me-2" type="search" placeholder="Пошук..." aria-label="Search"/>
+                <input class="form-control form-control-sm me-2" type="search" placeholder="Пошук..."
+                       aria-label="Search"/>
                 <button class="btn btn-outline-success btn-sm" type="submit">🔍</button>
             </form>
 
             <a href="/cart/index" class="btn btn-outline-secondary position-relative btn-sm me-2">
                 <i class="bi bi-cart2"></i> Кошик
                 <?php if (($count = $_SESSION['cart_count'] ?? 0) > 0): ?>
-                    <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span id="cart-badge"
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
             <?= $count ?>
         </span>
                 <?php endif; ?>
@@ -343,21 +358,22 @@ if (empty($Content))
             <?php else: ?>
                 <div class="dropdown">
                     <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                        <img src="https://github.com/mdo.png" alt="avatar" width="32" height="32" class="rounded-circle me-2"/>
-                        <span>Профіль</span>
+                        <span class="fw-semibold text-dark">
+            <i class="bi bi-person-circle me-1 text-primary"></i>
+            <?= $_SESSION['user']['login'] ?>
+        </span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/profile/settings">Налаштування</a></li>
-                        <li><a class="dropdown-item" href="/profile/orders">Мої замовлення</a></li>
-                        <li><a class="dropdown-item" href="/profile/favorites">Улюблені товари</a></li>
-
-                        <?php if ($_SESSION['user']['email'] === 'admin@petizoo.ua'): ?>
-                            <li><hr class="dropdown-divider"/></li>
-                            <li><a class="dropdown-item text-danger fw-semibold" href="/admin/dashboard"><i class="bi bi-shield-lock me-1"></i>Адмін-панель</a></li>
+                        <?php if ($_SESSION['user']['login'] === 'admin@petizoo.ua'): ?>
+                            <li><a class="dropdown-item text-danger fw-semibold" href="/admin/dashboard">
+                                    <i class="bi bi-shield-lock me-2 text-danger"></i>Панель адміністратора</a></li>
+                        <?php else: ?>
+                            <li><a class="dropdown-item" href="/profile/settings"><i class="bi bi-gear me-2"></i>Налаштування</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="bi bi-receipt me-2"></i>Мої замовлення</a></li>
+                            <li><a class="dropdown-item" href="/profile/favorites"><i class="bi bi-heart me-2"></i>Улюблені товари</a></li>
                         <?php endif; ?>
-
-                        <li><hr class="dropdown-divider"/></li>
-                        <li><a class="dropdown-item" href="/users/logout">Вийти</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/users/logout"><i class="bi bi-box-arrow-right me-2"></i>Вийти</a></li>
                     </ul>
                 </div>
             <?php endif; ?>

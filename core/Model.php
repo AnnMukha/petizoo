@@ -32,10 +32,7 @@ class Model
     }
     public static function findByCondition($conditionAssocArray) {
         $arr = Core::get()->db->select(static::$tableName, '*', $conditionAssocArray);
-        if (count($arr)>0)
-            return $arr;
-        else
-            return null;
+        return is_array($arr) ? $arr : []; // гарантує масив
     }
     public function save() {
         $isInsert = false;
@@ -59,7 +56,7 @@ class Model
     }
     public static function findAll(): array
     {
-        return \core\Core::get()->db->select(static::$tableName);
+        $result = \core\Core::get()->db->select(static::$tableName);
+        return is_array($result) ? $result : [];
     }
-
 }

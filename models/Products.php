@@ -21,15 +21,26 @@ class Products extends Model
 
     public static function GetAll($filter = 'all')
     {
-        if (in_array($filter, ['cat', 'dog'])) {
-            return self::findByCondition(["is_for" => $filter]); // 🐱 або 🐶
+        if (in_array($filter, ['cat', 'dog', 'both'])) {
+            $result = self::findByCondition(["is_for" => $filter]);
+            return $result ?? [];
         } else {
-            return Core::get()->db->select(self::$tableName); // всі
+            return static::findAll(); // ← Використовуємо базову реалізацію Model
         }
     }
+
     public static function getTopPopular($limit = 4)
     {
         $query = "SELECT * FROM " . self::$tableName . " ORDER BY stock DESC LIMIT $limit";
-        return \core\Core::get()->db->performQuery($query);
+        return Core::get()->db->performQuery($query);
     }
+    public static function add($data)
+    {
+        return Core::get()->db->insert(self::$tableName, $data);
+    }
+    public static function update($data, $where)
+    {
+        return \core\Core::get()->db->update(self::$tableName, $data, $where);
+    }
+
 }
