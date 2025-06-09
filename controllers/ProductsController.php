@@ -49,13 +49,10 @@ class ProductsController extends Controller
 
     public function actionSale()
     {
-        $products = Products::getDiscountedOrPopular();
+        $products = Products::findByCondition(['is_discounted' => 1]);
 
         $this->template->setParams([
-            'products' => $products,
-            'animal' => 'all',
-            'category' => 'all',
-            'subcategory' => 'all'
+            'products' => $products
         ]);
 
         return $this->render('products/sale');

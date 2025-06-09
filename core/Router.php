@@ -8,12 +8,12 @@ class Router
 
     public function __construct($route)
     {
-        $this->route = $route;
+        $this->route = $route ?? '';
     }
 
     public function run()
     {
-        $parts = explode('/', trim($this->route, '/'));
+        $parts = explode('/', trim((string)$this->route, '/'));
 
         // Встановлюємо контролер та дію за замовчуванням
         if (empty($parts[0])) {

@@ -128,6 +128,11 @@ if (empty($Content))
         .dropdown-menu i {
             width: 20px;
         }
+        .navbar-nav .nav-link[href="/product/sale"]:hover {
+            background-color: #fff5f5;
+            color: #dc3545;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -296,7 +301,7 @@ if (empty($Content))
                     </div>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="/product/sale">Акції</a></li>
+                <li class="nav-item"><a class="nav-link" href="/products/sale">Акції</a></li>
                 <!-- КОНТАКТИ ЯК ВИПАДАЮЧЕ МЕНЮ -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" role="button">
@@ -403,8 +408,8 @@ if (empty($Content))
                 <h6>Навігація</h6>
                 <ul class="list-unstyled">
                     <li><a href="/">Головна</a></li>
-                    <li><a href="/product/catalog">Каталог</a></li>
-                    <li><a href="/product/sale">Акції</a></li>
+                    <li><a href="/products/index">Каталог</a></li>
+                    <li><a href="/products/sale">Акції</a></li>
                 </ul>
             </div>
             <div class="col mb-3">

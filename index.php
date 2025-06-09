@@ -9,9 +9,11 @@ spl_autoload_register(static function ($className) {
     }
 });
 
-$route = $_GET['route'] ?? ''; // ← НЕ затискай $_GET
+$route = $_GET['route'] ?? null;
 
 $core = Core::get();
+
 $core->run($route);
 $core->done();
+
 
