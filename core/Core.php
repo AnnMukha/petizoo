@@ -13,7 +13,7 @@ class Core
     public Controller $controllerObject;
     private static $instance;
     public $session;
-     private function __construct(){
+    private function __construct(){
         $this->template = new Template($this->defaultLayoutPath);
         $host = Config::get()->dbHost;
         $name = Config::get()->dbName;

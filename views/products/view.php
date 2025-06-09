@@ -13,9 +13,21 @@ if (\models\Users::IsUserLogged()) {
 <div class="container my-5">
     <div class="row">
         <!-- Зображення товару -->
-        <div class="col-md-6 text-center">
+        <div class="position-relative d-inline-block w-100" style="max-height: 400px;">
+            <!-- Бейдж ХІТ -->
+            <?php if (!empty($product['is_popular'])): ?>
+                <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark px-3 py-2 shadow fw-bold"
+                      style="font-size: 0.9rem; border-radius: 8px; border: 1px solid #ffc107;">🔥 ХІТ</span>
+            <?php endif; ?>
+
+            <!-- Бейдж SALE -->
+            <?php if (!empty($product['is_discounted'])): ?>
+                <span class="position-absolute top-0 start-0 m-2 px-3 py-1 fw-bold shadow"
+                      style="background: linear-gradient(135deg, #ff3e3e, #b30000); color: #fff; font-size: 0.85rem; border-radius: 6px 0 6px 0; border: 1px solid #aa0000;">ЗНИЖКА!</span>
+            <?php endif; ?>
+
             <img src="/<?= isset($product['image']) && $product['image'] ? ltrim($product['image'], '/') : 'images/no-image.png' ?>"
-                 class="img-fluid rounded shadow-sm"
+                 class="img-fluid rounded shadow-sm w-100"
                  alt="<?= isset($product['name']) ? htmlspecialchars($product['name']) : 'Назва відсутня' ?>"
                  style="max-height: 400px; object-fit: contain;">
         </div>
@@ -26,7 +38,18 @@ if (\models\Users::IsUserLogged()) {
             <p class="text-muted mb-4"><?= isset($product['description']) ? nl2br(htmlspecialchars($product['description'])) : 'Опис відсутній' ?></p>
 
             <div class="mb-4">
-                <span class="fw-bold fs-4 text-teal"><?= isset($product['price']) ? number_format((float)$product['price'], 2) : '0.00' ?> грн</span>
+                <?php if (!empty($product['is_discounted']) && !empty($product['old_price'])): ?>
+                    <span class="text-muted text-decoration-line-through fs-5 me-2">
+            <?= number_format((float)$product['old_price'], 2) ?> грн
+        </span>
+                    <span class="fw-bold fs-4 text-danger">
+            <?= number_format((float)$product['price'], 2) ?> грн
+        </span>
+                <?php else: ?>
+                    <span class="fw-bold fs-4 text-teal">
+            <?= number_format((float)$product['price'], 2) ?> грн
+        </span>
+                <?php endif; ?>
             </div>
 
             <div class="d-flex gap-3">

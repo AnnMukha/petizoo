@@ -1,33 +1,54 @@
-<?php /** @var array $products */ ?>
-<?php /** @var array $categories */ ?>
-<?php /** @var string $animal */ ?>
-<?php /** @var string $category */ ?>
+<?php
+/** @var array $products */
+/** @var array $categories */
+/** @var array $subcategories */
+/** @var string $animal */
+/** @var string $category */
+/** @var string $subcategory */
+?>
 
 <h2 class="text-center my-4 fw-bold text-dark display-5">Каталог товарів</h2>
 
-<!-- 🔍 Форма фільтрації -->
 <form method="get" class="text-center mb-4 d-flex justify-content-center gap-3 flex-wrap">
+    <!-- Тип тварини -->
     <div>
-        <label class="form-label fw-semibold">Тип тварини:</label>
+        <label class="form-label fw-semibold">Для кого:</label>
         <select name="animal" class="form-select d-inline w-auto">
-            <option value="all" <?= ($animal ?? '') === 'all' ? 'selected' : '' ?>>Усі</option>
-            <option value="cat" <?= ($animal ?? '') === 'cat' ? 'selected' : '' ?>>Котам</option>
-            <option value="dog" <?= ($animal ?? '') === 'dog' ? 'selected' : '' ?>>Собакам</option>
-            <option value="both" <?= ($animal ?? '') === 'both' ? 'selected' : '' ?>>Котам і собакам</option>
+            <option value="all" <?= $animal === 'all' ? 'selected' : '' ?>>Усі</option>
+            <option value="cat" <?= $animal === 'cat' ? 'selected' : '' ?>>Котам</option>
+            <option value="dog" <?= $animal === 'dog' ? 'selected' : '' ?>>Собакам</option>
+            <option value="both" <?= $animal === 'both' ? 'selected' : '' ?>>Котам і собакам</option>
         </select>
     </div>
+    <!-- Категорія -->
     <div>
-        <label class="form-label fw-semibold">Підкатегорія:</label>
-        <select name="category" class="form-select d-inline w-auto">
-            <option value="all" <?= ($category ?? '') === 'all' ? 'selected' : '' ?>>Усі</option>
-            <?php foreach ($categories as $subcategory): ?>
-                <option value="<?= $subcategory['id'] ?>" <?= ($category ?? '') == $subcategory['id'] ? 'selected' : '' ?>
-                ><?= htmlspecialchars($subcategory['name']) ?></option>
+        <label class="form-label fw-semibold">Категорія:</label>
+        <select name="category" id="categorySelect" class="form-select d-inline w-auto">
+            <option value="all" <?= $category === 'all' ? 'selected' : '' ?>>Усі</option>
+            <?php foreach ($categories as $cat): ?>
+                <option value="<?= $cat['id'] ?>" <?= $category == $cat['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($cat['name']) ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </div>
+    <!-- Підкатегорія -->
+    <div>
+        <label class="form-label fw-semibold">Підкатегорія:</label>
+        <select name="subcategory" id="subcategorySelect" class="form-select d-inline w-auto">
+            <option value="all" <?= $subcategory === 'all' ? 'selected' : '' ?>>Усі</option>
+            <?php foreach ($subcategories as $sub): ?>
+                <option value="<?= $sub['id'] ?>" data-category="<?= $sub['category_id'] ?>"
+                    <?= $subcategory == $sub['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($sub['name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <!-- Кнопка -->
     <div class="align-self-end">
-        <button type="submit" class="btn btn-outline-teal">Фільтрувати</button>
+        <button type="submit" class="btn btn-primary">Фільтрувати</button>
     </div>
 </form>
 
@@ -37,6 +58,14 @@
         <?php foreach ($products as $product): ?>
             <div class="col">
                 <div class="card product-card h-100 shadow-sm rounded-4 position-relative">
+                    <?php if ($product['is_discounted']): ?>
+                        <span class="position-absolute top-0 start-0 m-2 px-3 py-1 fw-bold shadow"
+                              style="background: linear-gradient(135deg, #ff3e3e, #b30000); color: #fff; font-size: 0.85rem; border-radius: 6px 0 6px 0; border: 1px solid #aa0000;">ЗНИЖКА!</span>
+                    <?php endif; ?>
+                    <?php if ($product['is_popular']): ?>
+                        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark px-3 py-2 shadow fw-bold"
+                              style="font-size: 0.9rem; border-radius: 8px; border: 1px solid #ffc107;">🔥 ХІТ</span>
+                    <?php endif; ?>
                     <a href="/products/view/<?= $product['id'] ?>" class="text-decoration-none text-dark">
                         <div class="product-img-wrapper bg-light d-flex align-items-center justify-content-center p-4">
                             <img src="/<?= ltrim($product['image'], '/') ?>" class="card-img-top img-fluid" alt="<?= htmlspecialchars($product['name']) ?>">
@@ -46,14 +75,24 @@
                             <p class="card-text small text-muted"><?= htmlspecialchars($product['description']) ?></p>
                         </div>
                     </a>
+
                     <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center px-3 pb-3">
-                        <span class="fw-bold text-teal fs-5"><?= number_format($product['price'], 2) ?> грн</span>
+                        <div class="d-flex flex-column align-items-start">
+                            <?php if ($product['is_discounted'] && $product['new_price'] !== null): ?>
+                                <small class="text-muted text-decoration-line-through"><?= number_format($product['price'], 2) ?> грн</small>
+                                <span class="text-danger fw-bold fs-5"><?= number_format($product['new_price'], 2) ?> грн</span>
+                            <?php else: ?>
+                                <span class="fw-bold text-teal fs-5"><?= number_format($product['price'], 2) ?> грн</span>
+                            <?php endif; ?>
+                        </div>
+
                         <div class="d-flex gap-3">
                             <a href="/cart/ajaxadd/<?= $product['id'] ?>"
                                class="btn btn-outline-teal btn-icon shadow-sm btn-add-to-cart"
                                data-id="<?= $product['id'] ?>" title="Додати до кошика">
                                 <i class="bi bi-cart-plus fs-5"></i>
                             </a>
+
                             <?php if (\models\Users::IsUserLogged()): ?>
                                 <?php
                                 $isFavorite = \core\Core::get()->db->select('favorites', '*', [
@@ -83,6 +122,29 @@
     <?php endif; ?>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categorySelect = document.getElementById('categorySelect');
+        const subcategorySelect = document.getElementById('subcategorySelect');
+
+        function filterSubcategories() {
+            const selectedCategory = categorySelect.value;
+            Array.from(subcategorySelect.options).forEach(option => {
+                const optionCategory = option.dataset.category;
+                if (!optionCategory || selectedCategory === 'all') {
+                    option.hidden = false;
+                } else {
+                    option.hidden = optionCategory !== selectedCategory;
+                }
+            });
+            if (subcategorySelect.selectedOptions.length > 0 &&
+                subcategorySelect.selectedOptions[0].hidden) {
+                subcategorySelect.value = 'all';
+            }
+        }
+
+        categorySelect.addEventListener('change', filterSubcategories);
+        filterSubcategories();
+    });
     document.addEventListener('DOMContentLoaded', function () {
         const buttons = document.querySelectorAll('.btn-add-to-cart');
         buttons.forEach(btn => {
@@ -250,4 +312,3 @@
         transform: translateY(0);
     }
 </style>
-

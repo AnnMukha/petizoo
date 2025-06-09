@@ -19,10 +19,10 @@ class Model
     }
     public static function deleteByID($id) {
         Core::get()->db->delete(static::$tableName, [static::$primaryKey => $id]);
-}
+    }
     public static function deleteByCondition($conditionAssocArray) {
         Core::get()->db->delete(static::$tableName, $conditionAssocArray);
-}
+    }
     public static function findByID($id) {
         $arr = Core::get()->db->select(static::$tableName, '*',[static::$primaryKey => $id]);
         if (count($arr)>0)

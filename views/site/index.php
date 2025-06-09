@@ -1,6 +1,8 @@
 <?php
 $this->Title = '' ;
 ?>
+<?php $currentSubcategory = $_GET['subcategory'] ?? null; ?>
+
 <!doctype html>
 <html lang="uk">
 <head>
@@ -11,36 +13,37 @@ $this->Title = '' ;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        /* ========================
+         1. Загальні стилі
+        =========================== */
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #fefefe;
         }
-
-        /* ================== HERO ================== */
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: bold;
+        .shadow-sm {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+        .text-teal {
+            color: #38b6a3;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-        }
-
-        /* ================== КАРУСЕЛЬ ================== */
+        /* ========================
+           2. Карусель (Hero)
+        =========================== */
         .carousel-item img {
             width: 100vw;
             height: auto;
             object-fit: cover;
         }
-
         .carousel-fullscreen {
             width: 100vw;
             margin-left: calc(-50vw + 50%);
             overflow: hidden;
         }
 
+        /* ========================
+           3. Іконки
+        =========================== */
         .icon-circle {
             background-color: #fff;
             color: #38b6a3;
@@ -56,232 +59,103 @@ $this->Title = '' ;
             transition: all 0.3s ease-in-out;
         }
 
-        .text-teal {
+        /* ========================
+           4. Категорії: Блоки
+        =========================== */
+        .category-box {
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: left;
+            font-size: 15.5px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            min-height: 300px;
+            position: relative;
+        }
+        .category-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
+        }
+        .category-box h5 {
+            font-weight: 800;
+            font-size: 1.25rem;
+            margin-bottom: 14px;
+            color: #1c1c1c;
+            transition: color 0.3s ease;
+        }
+        .category-box:hover h5 {
             color: #38b6a3;
         }
-        .shadow-sm {
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        }
 
-        ul li {
-            margin-bottom: 8px;
-        }
-
-        /* ============== СТИЛІ ДЛЯ КАРТОК КАТЕГОРІЙ ============== */
-        .category-box {
-            background-color: #f8fdfb;
-            border-radius: 14px;
-            padding: 20px;
-            text-align: left;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
-            height: 100%;
-            font-size: 14.5px;
-        }
-
-        .category-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 22px rgba(0, 0, 0, 0.08);
-        }
-
-        .category-box .icon-circle {
-            width: 52px;
-            height: 52px;
-            font-size: 24px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            background-color: white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        }
-
-        .category-box h5 {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: #1c1c1c;
-        }
-
+        /* ========================
+           5. Категорії: Підкатегорії
+        =========================== */
         .category-box ul {
             list-style: none;
             padding-left: 0;
-            margin-bottom: 0;
+            margin: 0;
         }
-
         .category-box ul li {
-            padding: 4px 0;
-            padding-left: 18px;
-            color: #333;
-            position: relative;
+            margin: 0;
+            padding: 0;
         }
-
-        .category-box ul li::before {
-            content: '•';
+        .category-box ul li a {
+            display: block;
+            padding: 8px 16px 8px 32px;
+            border-radius: 10px;
+            font-weight: 500;
+            position: relative;
+            color: #00796b;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        .category-box ul li a::before {
+            content: "›";
             position: absolute;
-            left: 0;
-            top: 4px;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             font-size: 16px;
+            opacity: 0.6;
             color: #38b6a3;
         }
+        .bg-food ul li a:hover {
+            background-color: #ffeef0;
+            color: #c92a44;
+        }
+        .bg-health ul li a:hover {
+            background-color: #e7fbf7;
+            color: #008c7a;
+        }
+        .bg-play ul li a:hover {
+            background-color: #fff9e6;
+            color: #a68300;
+        }
+        .category-box ul li a:hover {
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
 
-        /* Індивідуальні фони */
+        /* ========================
+           6. Колірні схеми блоків
+        =========================== */
         .bg-food {
             background-color: #fff1f2;
             border-left: 5px solid #ff6b81;
         }
-
         .bg-health {
             background-color: #f0fdfa;
             border-left: 5px solid #38b6a3;
         }
-
         .bg-play {
             background-color: #fffceb;
             border-left: 5px solid #fbc02d;
         }
 
-        /* === КАРТОЧКИ ТОВАРІВ === */
-        .product-tile {
-            background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
-            transition: all 0.3s ease;
-            text-align: center;
-            height: 100%;
-            padding: 20px 15px;
-        }
-
-        .product-tile:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-img {
-            max-height: 180px;
-            object-fit: contain;
-            border-radius: 12px;
-            background: #f6f6f6;
-            padding: 8px;
-            margin-bottom: 10px;
-            width: 100%;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.03);
-        }
-
-        .product-tile h6 {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 5px;
-            color: #1c1c1c;
-        }
-
-        .product-tile p {
-            font-size: 16px;
-            color: #38b6a3;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .btn-petizoo {
-            background-color: #38b6a3;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 8px 20px;
-            font-size: 14px;
-        }
-
-        .btn-petizoo:hover {
-            background-color: #2fa191;
-            transform: scale(1.03);
-            box-shadow: 0 0 0 4px rgba(56, 182, 163, 0.15);
-        }
-
-
-        /* === Переваги === */
-        .features-section {
-            background-color: #fefefe;
-            border-radius: 20px;
-            padding: 40px 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
-        }
-
-        .feature-box {
-            border-radius: 16px;
-            padding: 30px 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-            height: 100%;
-            border-left: 6px solid transparent;
-        }
-
-        .feature-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 26px rgba(0,0,0,0.08);
-        }
-
-        .feature-box i {
-            font-size: 36px;
-            color: #fff;
-            background-color: #38b6a3;
-            padding: 14px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            display: inline-block;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .feature-box h6 {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #222;
-            margin-bottom: 8px;
-        }
-
-        .feature-box p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        /* Індивідуальні кольори */
-        .bg-delivery {
-            background-color: #e9fdf8;
-            border-left-color: #2fc3aa;
-        }
-
-        .bg-quality {
-            background-color: #f3f0ff;
-            border-left-color: #a275d3;
-        }
-
-        .bg-support {
-            background-color: #fff8ec;
-            border-left-color: #f4b400;
-        }
-        .product-img {
-            height: 160px;
-            width: 100%;
-            object-fit: contain;
-            background-color: #f6f6f6;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .btn-outline-teal {
-            color: #38b6a3;
-            border: 2px solid #38b6a3;
-            background-color: transparent;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-teal:hover {
-            background-color: #38b6a3;
-            color: white;
-            box-shadow: 0 0 0 4px rgba(56, 182, 163, 0.15);
-        }
+        /* ========================
+           7. Плитки товарів
+        =========================== */
         .product-tile {
             background-color: #ffffff;
             border-radius: 16px;
@@ -292,12 +166,10 @@ $this->Title = '' ;
             padding: 20px 15px;
             min-width: 230px;
         }
-
         .product-tile:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
         }
-
         .product-tile h6 {
             font-weight: 600;
             font-size: 15px;
@@ -307,14 +179,12 @@ $this->Title = '' ;
             overflow: hidden;
             line-height: 1.2;
         }
-
         .product-tile p {
             font-size: 15px;
             color: #38b6a3;
             font-weight: 600;
             margin-bottom: 10px;
         }
-
         .product-img {
             height: 160px;
             width: 100%;
@@ -324,6 +194,85 @@ $this->Title = '' ;
             border-radius: 10px;
             margin-bottom: 12px;
         }
+
+        /* ========================
+           8. Кнопки
+        =========================== */
+        .btn-petizoo {
+            background-color: #38b6a3;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+        .btn-petizoo:hover {
+            background-color: #2fa191;
+            transform: scale(1.03);
+            box-shadow: 0 0 0 4px rgba(56, 182, 163, 0.15);
+        }
+        .btn-outline-teal {
+            color: #38b6a3;
+            border: 2px solid #38b6a3;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-teal:hover {
+            background-color: #38b6a3;
+            color: white;
+            box-shadow: 0 0 0 4px rgba(56, 182, 163, 0.15);
+        }
+
+        /* ========================
+           9. Блок переваг
+        =========================== */
+        .features-section {
+            background-color: #fefefe;
+            border-radius: 20px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        .feature-box {
+            border-radius: 16px;
+            padding: 30px 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+            height: 100%;
+            border-left: 6px solid transparent;
+        }
+        .feature-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+        }
+        .feature-box i {
+            font-size: 36px;
+            color: #fff;
+            background-color: #38b6a3;
+            padding: 14px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .feature-box h6 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .feature-box p {
+            font-size: 14px;
+            color: #555;
+        }
+        .bg-delivery { background-color: #e9fdf8; border-left-color: #2fc3aa; }
+        .bg-quality { background-color: #f3f0ff; border-left-color: #a275d3; }
+        .bg-support { background-color: #fff8ec; border-left-color: #f4b400; }
+
+        /* ========================
+           10. Заголовки секцій
+        =========================== */
         .section-title {
             font-size: 2rem;
             font-weight: 800;
@@ -332,7 +281,6 @@ $this->Title = '' ;
             color: #1c1c1c;
             position: relative;
         }
-
         .section-title::after {
             content: "";
             width: 60px;
@@ -394,48 +342,50 @@ $this->Title = '' ;
     <div class="row g-4">
         <!-- Харчування -->
         <div class="col-md-4">
-            <div class="category-box bg-food">
+            <div class="category-box bg-food position-relative">
+                <a href="/products?animal=both&category=1" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
                 <div class="icon-circle">🍖</div>
-                <h5>Харчування</h5>
-                <ul>
-                    <li>Сухий корм</li>
-                    <li>Вологий корм</li>
-                    <li>Ласощі</li>
-                    <li>Миски та контейнери</li>
+                <h5 >Харчування</h5>
+                <ul class="position-relative" style="z-index:2;">
+                    <li><a href="/products?animal=both&category=1&subcategory=1" class="<?= $currentSubcategory == 1 ? 'active-sub' : '' ?>">Сухий корм</a></li>
+                    <li><a href="/products?animal=both&category=1&subcategory=2" class="<?= $currentSubcategory == 2 ? 'active-sub' : '' ?>">Вологий корм</a></li>
+                    <li><a href="/products?animal=both&category=1&subcategory=3" class="<?= $currentSubcategory == 3 ? 'active-sub' : '' ?>">Ласощі</a></li>
+                    <li><a href="/products?animal=both&category=1&subcategory=4" class="<?= $currentSubcategory == 4 ? 'active-sub' : '' ?>">Миски та контейнери</a></li>
                 </ul>
             </div>
         </div>
 
         <!-- Ветеринарія -->
         <div class="col-md-4">
-            <div class="category-box bg-health">
+            <div class="category-box bg-health position-relative">
+                <a href="/products?animal=both&category=2" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
                 <div class="icon-circle">💊</div>
                 <h5>Ветеринарія</h5>
-                <ul>
-                    <li>Вітаміни</li>
-                    <li>Від бліх і кліщів</li>
-                    <li>Гігієнічні засоби</li>
-                    <li>Пелюшки, туалети</li>
+                <ul class="position-relative" style="z-index:2;">
+                    <li><a href="/products?animal=both&category=2&subcategory=7" class="<?= $currentSubcategory == 7 ? 'active-sub' : '' ?>">Вітаміни</a></li>
+                    <li><a href="/products?animal=both&category=2&subcategory=5" class="<?= $currentSubcategory == 5 ? 'active-sub' : '' ?>">Від бліх і кліщів</a></li>
+                    <li><a href="/products?animal=both&category=2&subcategory=8" class="<?= $currentSubcategory == 8 ? 'active-sub' : '' ?>">Гігієнічні засоби</a></li>
+                    <li><a href="/products?animal=both&category=2&subcategory=9" class="<?= $currentSubcategory == 9 ? 'active-sub' : '' ?>">Пелюшки, туалети</a></li>
                 </ul>
             </div>
         </div>
 
         <!-- Прогулянка -->
         <div class="col-md-4">
-            <div class="category-box bg-play">
+            <div class="category-box bg-play position-relative">
+                <a href="/products?animal=both&category=3" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
                 <div class="icon-circle">🎾</div>
                 <h5>Прогулянка та дозвілля</h5>
-                <ul>
-                    <li>Іграшки</li>
-                    <li>Амуніція</li>
-                    <li>Сумки, перенесення</li>
-                    <li>Лежаки, одяг</li>
+                <ul class="position-relative" style="z-index:2;">
+                    <li><a href="/products?animal=both&category=3&subcategory=10" class="<?= $currentSubcategory == 10 ? 'active-sub' : '' ?>">Іграшки</a></li>
+                    <li><a href="/products?animal=both&category=3&subcategory=15" class="<?= $currentSubcategory == 15 ? 'active-sub' : '' ?>">Амуніція</a></li>
+                    <li><a href="/products?animal=both&category=3&subcategory=12" class="<?= $currentSubcategory == 12 ? 'active-sub' : '' ?>">Сумки, перенесення</a></li>
+                    <li><a href="/products?animal=both&category=3&subcategory=13" class="<?= $currentSubcategory == 13 ? 'active-sub' : '' ?>">Лежаки, одяг</a></li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
-
 
 <!-- Популярні товари -->
 <section class="container my-0">
@@ -444,10 +394,15 @@ $this->Title = '' ;
     <div class="popular-scroll d-flex overflow-auto pb-3 gap-4">
         <?php if (!empty($popular)): ?>
             <?php foreach ($popular as $item): ?>
-                <div class="product-tile p-3 flex-shrink-0" style="width: 250px;">
-                    <img src="<?= htmlspecialchars($item['image']) ?>" class="img-fluid product-img" alt="<?= htmlspecialchars($item['name']) ?>">
-                    <h6 class="mt-3 fw-semibold"><?= htmlspecialchars($item['name']) ?></h6>
-                    <p class="text-teal fw-bold mb-2"><?= htmlspecialchars($item['price']) ?> грн</p>
+                <div class="position-relative product-tile p-3 flex-shrink-0" style="width: 250px;">
+                    <?php if (!empty($item['is_popular'])): ?>
+                        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow">ХІТ</span>
+                    <?php endif; ?>
+                    <a href="/products/view/<?= (int)$item['id'] ?>" class="text-decoration-none text-dark">
+                        <img src="<?= htmlspecialchars($item['image']) ?>" class="img-fluid product-img" alt="<?= htmlspecialchars($item['name']) ?>">
+                        <h6 class="mt-3 fw-semibold text-center"><?= htmlspecialchars($item['name']) ?></h6>
+                    </a>
+                    <p class="text-teal fw-bold text-center mb-2"><?= htmlspecialchars($item['price']) ?> грн</p>
                     <button type="button" class="btn btn-petizoo w-100 add-to-cart" data-id="<?= (int)$item['id'] ?>">
                         <i class="bi bi-cart"></i> До кошика
                     </button>
@@ -465,7 +420,6 @@ $this->Title = '' ;
         </a>
     </div>
 </section>
-
 <!-- Переваги -->
 <section class="container mt-4 mb-5 features-section">
     <h3 class="section-title">Чому Petizoo?</h3>
@@ -498,27 +452,43 @@ $this->Title = '' ;
         const buttons = document.querySelectorAll(".add-to-cart");
 
         buttons.forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function (e) {
+                e.preventDefault(); // ❗️запобігає стрибку на початок
+
                 const productId = this.dataset.id;
 
                 fetch(`/cart/ajaxadd/${productId}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === 'success') {
+                            // Оновити значок у шапці
                             const badge = document.querySelector('#cart-badge');
                             if (badge) {
                                 badge.textContent = data.count;
                                 badge.classList.remove("d-none");
                             }
 
+                            // Змінити кнопку
                             this.classList.remove("btn-petizoo");
                             this.classList.add("btn-success");
                             this.innerHTML = "✅ Додано!";
+
+                            // Через 1.5 секунди повернути кнопку назад
                             setTimeout(() => {
                                 this.classList.remove("btn-success");
                                 this.classList.add("btn-petizoo");
                                 this.innerHTML = '<i class="bi bi-cart"></i> До кошика';
                             }, 1500);
+
+                            // Оновити вміст кошика, якщо є контейнер
+                            fetch('/cart/ajaxhtml') // ❗️створи новий метод, який повертає HTML кошика
+                                .then(res => res.text())
+                                .then(html => {
+                                    const cartDropdown = document.querySelector('#cart-dropdown-content');
+                                    if (cartDropdown) {
+                                        cartDropdown.innerHTML = html;
+                                    }
+                                });
                         } else {
                             alert("Не вдалося додати товар");
                         }

@@ -1,6 +1,8 @@
 <?php
 /** @var string $Title */
 /** @var string $Content */
+/** @var array $categories */
+/** @var array $subcategories */
 if (empty($Title))
     $Title = '';
 if (empty($Content))
@@ -18,6 +20,9 @@ if (empty($Content))
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         /* ------------------- ОСНОВНІ СТИЛІ ------------------- */
+        body {
+            padding-top: 100px;
+        }
         .topbar {
             background-color: #38b6a3;
             color: white;
@@ -46,7 +51,11 @@ if (empty($Content))
         .text-teal {
             color: #38b6a3 !important;
         }
-
+        .mega-menu {
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
         /* ------------------- НАВІГАЦІЯ ------------------- */
         .navbar-nav .nav-link {
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -122,6 +131,7 @@ if (empty($Content))
     </style>
 </head>
 <body>
+<div class="fixed-top shadow-sm bg-white" style="z-index: 1030;">
 <!-- TOPBAR -->
 <div class="topbar py-2">
     <div class="container d-flex justify-content-between align-items-center">
@@ -143,72 +153,73 @@ if (empty($Content))
 
                 <!-- КОТАМ -->
                 <li class="nav-item dropdown">
-                    <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                       href="#">Котам</a>
+                    <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Котам</a>
                     <div class="dropdown-menu p-3" style="min-width: 1000px; padding: 28px;">
                         <div class="row g-3">
+                            <!-- Харчування -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
-                                    <div class="text-center"><i class="bi bi-bag-heart-fill fs-2 text-teal"></i>
+                                    <div class="text-center">
+                                        <i class="bi bi-bag-heart-fill fs-2 text-teal"></i>
                                         <div class="fw-bold mt-2">Харчування</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Сухий корм</a>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=1">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Сухий корм</a>
                                         </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Консервований
-                                                корм</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Ласощі</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Миски та
-                                                контейнери для дому</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=2">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Консервований корм</a>
+                                        </li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=3">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Ласощі</a>
+                                        </li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=4">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Миски та контейнери для дому</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
+
+                            <!-- Здоров'я та гігієна -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
-                                    <div class="text-center"><i class="bi bi-capsule-pill fs-2 text-teal"></i>
+                                    <div class="text-center">
+                                        <i class="bi bi-capsule-pill fs-2 text-teal"></i>
                                         <div class="fw-bold mt-2">Здоров'я та гігієна</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та
-                                                кліщів</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Засоби для
-                                                догляду</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Пелюшки та
-                                                туалети</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=5">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та кліщів</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=6">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=7">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=8">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Засоби для догляду</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=9">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Пелюшки та туалети</a></li>
                                     </ul>
                                 </div>
                             </div>
+
+                            <!-- Прогулянка та дозвілля -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
-                                    <div class="text-center"><i class="bi bi-balloon-heart fs-2 text-teal"></i>
+                                    <div class="text-center">
+                                        <i class="bi bi-heart fs-2 text-teal"></i>
                                         <div class="fw-bold mt-2">Прогулянка та дозвілля</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Іграшки</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Кігтеточки</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Сумки, переноски</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Лежаки</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Нашийники,
-                                                довідки, шлеї</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=10">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Іграшки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=11">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Кігтеточки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=12">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Сумки, переноски</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=13">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Лежаки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=14">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Нашийники, довідки, шлеї</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -221,68 +232,63 @@ if (empty($Content))
                        href="#">Собакам</a>
                     <div class="dropdown-menu p-3" style="min-width: 1000px; padding: 28px;">
                         <div class="row g-3">
+                            <!-- Харчування -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center"><i class="bi bi-bag-heart-fill fs-2 text-teal"></i>
                                         <div class="fw-bold mt-2">Харчування</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Сухий корм</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Консерви та
-                                                вологий корм</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Ласощі</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Миски та
-                                                контейнери для дому</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=1">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Сухий корм</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=2">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Консервований корм</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=3">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Ласощі</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=4">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Миски та контейнери для дому</a></li>
                                     </ul>
                                 </div>
                             </div>
+                            <!-- Здоров’я та гігієна -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center"><i class="bi bi-capsule-pill fs-2 text-teal"></i>
-                                        <div class="fw-bold mt-2">Здоров'я та гігієна</div>
+                                        <div class="fw-bold mt-2">Здоров’я та гігієна</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та
-                                                кліщів</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Засоби для
-                                                догляду</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Пелюшки та
-                                                туалети</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=5">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та кліщів</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=6">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=7">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=8">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Засоби для догляду</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=9">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Пелюшки та туалети</a></li>
                                     </ul>
                                 </div>
                             </div>
+                            <!-- Прогулянка та дозвілля -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center"><i class="bi bi-balloon-heart fs-2 text-teal"></i>
                                         <div class="fw-bold mt-2">Прогулянка та дозвілля</div>
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Іграшки</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Амуніція</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Рулетки</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Сумки, переноски</a>
-                                        </li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Лежаки</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="#"><i
-                                                        class="bi bi-chevron-right me-1 text-teal"></i>Одяг</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=10">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Іграшки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=15">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Амуніція</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=16">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Рулетки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=12">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Сумки, переноски</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=13">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Лежаки</a></li>
+                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=17">
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Одяг</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -380,7 +386,7 @@ if (empty($Content))
         </div>
     </div>
 </nav>
-
+</div>
 <main class="container pt-0 bg-white p-4 rounded shadow-sm my-4">
     <h1 class="mb-4"><?= $Title ?></h1>
     <?= $Content ?>

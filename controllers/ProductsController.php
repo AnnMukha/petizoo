@@ -5,6 +5,7 @@ namespace controllers;
 use core\Controller;
 use core\Core;
 use models\Products;
+use core\DB;
 
 class ProductsController extends Controller
 {
@@ -12,28 +13,52 @@ class ProductsController extends Controller
     {
         $animal = $_GET['animal'] ?? 'all';
         $category = $_GET['category'] ?? 'all';
+        $subcategory = $_GET['subcategory'] ?? 'all';
 
-        $conditions = [];
+        $query = "SELECT * FROM products WHERE 1=1";
+        $params = [];
 
         if ($animal !== 'all') {
-            $conditions['is_for'] = $animal;
+            $query .= " AND (is_for = :animal OR is_for = 'both')";
+            $params['animal'] = $animal;
         }
 
-        if ($category !== 'all') {
-            $conditions['subcategory_id'] = $category;
+        if ($subcategory !== 'all') {
+            $query .= " AND subcategory_id = :subcategory";
+            $params['subcategory'] = $subcategory;
+        } elseif ($category !== 'all') {
+            $query .= " AND subcategory_id IN (SELECT id FROM subcategories WHERE category_id = :category)";
+            $params['category'] = $category;
         }
 
-        $products = Core::get()->db->select('products', '*', $conditions);
+        $products = Core::get()->db->performQuery($query, $params);
+        $categories = Core::get()->db->select('categories');
         $subcategories = Core::get()->db->select('subcategories');
 
         $this->template->setParams([
             'products' => $products,
             'animal' => $animal,
             'category' => $category,
-            'categories' => $subcategories
+            'subcategory' => $subcategory,
+            'categories' => $categories,
+            'subcategories' => $subcategories,
         ]);
 
         return $this->render('products/index');
+    }
+
+    public function actionSale()
+    {
+        $products = Products::getDiscountedOrPopular();
+
+        $this->template->setParams([
+            'products' => $products,
+            'animal' => 'all',
+            'category' => 'all',
+            'subcategory' => 'all'
+        ]);
+
+        return $this->render('products/sale');
     }
 
     public function actionFavorite()

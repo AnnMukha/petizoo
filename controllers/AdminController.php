@@ -136,5 +136,54 @@ class AdminController extends Controller
         \models\Products::deleteByID($id);
         return $this->redirect('/admin/products');
     }
+    public function actionUpdatemarks()
+    {
+        $this->checkAdmin();
 
+        $popular = $_POST['popular'] ?? [];
+        $discounted = $_POST['discounted'] ?? [];
+        $newPrices = $_POST['new_price'] ?? [];
+
+        $products = \models\Products::GetAll('all');
+
+        foreach ($products as $product) {
+            $id = $product['id'];
+            $isPopular = isset($popular[$id]) ? 1 : 0;
+            $isDiscounted = isset($discounted[$id]) ? 1 : 0;
+            $basePrice = $product['price'];
+            $newPrice = isset($newPrices[$id]) && $newPrices[$id] !== '' ? (float)$newPrices[$id] : null;
+
+            if ($isDiscounted && $newPrice !== null && $newPrice < $basePrice) {
+                \models\Products::update([
+                    'is_popular' => $isPopular,
+                    'is_discounted' => 1,
+                    'new_price' => $newPrice
+                ], ['id' => $id]);
+            } elseif (!$isDiscounted) {
+                \models\Products::update([
+                    'is_popular' => $isPopular,
+                    'is_discounted' => 0,
+                    'new_price' => null
+                ], ['id' => $id]);
+            } else {
+                // Якщо is_discounted залишився 1, але ціна не змінилась/невалідна — лише популярне
+                \models\Products::update([
+                    'is_popular' => $isPopular
+                ], ['id' => $id]);
+            }
+        }
+
+        // Після збереження — лишаємося на цій самій сторінці
+        $updatedProducts = \models\Products::GetAll('all');
+        $this->template->setParam('products', $updatedProducts);
+        return $this->render('admin/markproducts');
+    }
+    public function actionMarkproducts()
+    {
+        $this->checkAdmin();
+
+        $products = \models\Products::GetAll('all');
+        $this->template->setParam('products', $products);
+        return $this->render('admin/markproducts');
+    }
 }

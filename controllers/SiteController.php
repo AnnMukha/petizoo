@@ -7,12 +7,17 @@ use models\Products;
 
 class SiteController extends Controller
 {
-    public function actionIndex(){
-        $popular = \models\Products::getTopPopular(10);
+    public function actionIndex()
+    {
+        $popular = Products::getTopPopular(10);
+
         $this->template->setParam('popular', $popular);
+
         return $this->render();
     }
-    public function actionError($code){
+
+    public function actionError($code)
+    {
         echo $code;
     }
 }

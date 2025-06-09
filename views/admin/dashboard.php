@@ -10,4 +10,8 @@
     <a href="/" class="btn btn-outline-secondary btn-lg d-flex align-items-center gap-2 px-4">
         <i class="bi bi-arrow-left"></i> Повернутись на сайт
     </a>
+    <a href="/admin/markproducts" class="btn btn-outline-warning btn-lg d-flex align-items-center gap-2 px-4">
+        <i class="bi bi-tags"></i> Акції та хіти
+    </a>
 </div>
+

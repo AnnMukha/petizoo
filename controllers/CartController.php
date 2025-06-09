@@ -289,4 +289,34 @@ class CartController extends Controller
 
         return $this->redirect('/cart/index#cart');
     }
+    public function actionAjaxhtml()
+    {
+        $user = \models\Users::GetCurrentAuthenticatedUser();
+        $cartItems = [];
+
+        if ($user !== null) {
+            $cartItems = Core::get()->db->performQuery("SELECT ci.*, p.name, p.image, p.price FROM cart_items ci JOIN products p ON ci.product_id = p.id WHERE ci.user_id = :user_id", [
+                'user_id' => $user['id']
+            ]);
+        } elseif (!empty($_SESSION['cart'])) {
+            $ids = array_keys($_SESSION['cart']);
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $stmt = Core::get()->db->pdo->prepare("SELECT * FROM products WHERE id IN ($placeholders)");
+            $stmt->execute($ids);
+            $products = $stmt->fetchAll();
+
+            foreach ($products as $product) {
+                $cartItems[] = [
+                    'product_id' => $product['id'],
+                    'name' => $product['name'],
+                    'image' => $product['image'],
+                    'price' => $product['price'],
+                    'quantity' => $_SESSION['cart'][$product['id']]
+                ];
+            }
+        }
+
+        $this->template->setParams(['items' => $cartItems]);
+        return $this->renderPartial('cart/ajax_cart');
+    }
 }

@@ -15,6 +15,7 @@ class Router
     {
         $parts = explode('/', trim($this->route, '/'));
 
+        // Встановлюємо контролер та дію за замовчуванням
         if (empty($parts[0])) {
             $parts[0] = 'site';
             $parts[1] = 'index';
@@ -25,22 +26,22 @@ class Router
         \core\Core::get()->moduleName = $parts[0];
         \core\Core::get()->actionName = $parts[1];
 
-        $controller = 'controllers\\' . ucfirst($parts[0]) . 'Controller';
-        $method = 'action' . ucfirst($parts[1]);
+        $controllerClass = 'controllers\\' . ucfirst($parts[0]) . 'Controller';
+        $actionMethod = 'action' . ucfirst($parts[1]);
 
-        if (class_exists($controller)) {
-            $controllerObject = new $controller();
+        if (class_exists($controllerClass)) {
+            $controllerObject = new $controllerClass();
             \core\Core::get()->controllerObject = $controllerObject;
 
             $params = array_slice($parts, 2);
 
-            // ✅ Підтримка id з URL: /profile/order/6
+            // Підтримка передачі параметрів з урла (наприклад: /profile/order/6)
             if (!empty($params) && !isset($_GET['id'])) {
                 $_GET['id'] = $params[0];
             }
 
-            if (method_exists($controllerObject, $method)) {
-                return $controllerObject->$method($params);
+            if (method_exists($controllerObject, $actionMethod)) {
+                return $controllerObject->$actionMethod($params);
             } else {
                 $this->error(404);
             }
@@ -52,15 +53,13 @@ class Router
     public function error($code)
     {
         http_response_code($code);
-        switch ($code) {
-            case '404':
-                echo '<h1>404 Not Found</h1>';
-                break;
+        if ($code == 404) {
+            echo '<h1>404 Not Found</h1>';
         }
     }
 
     public function done()
     {
-        // Placeholder
+        // for compatibility
     }
 }

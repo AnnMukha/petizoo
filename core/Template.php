@@ -10,6 +10,9 @@ class Template
     public function __set($name, $value){
         Core::get()->template->setParam($name, $value);
     }
+    public function __get($name) {
+        return $this->paramsArray[$name] ?? null;
+    }
     public function __construct($templateFilePath) {
         $this->templateFilePath = $templateFilePath;
         $this->paramsArray = [];

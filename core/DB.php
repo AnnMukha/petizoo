@@ -1,6 +1,7 @@
 <?php
 
 namespace core;
+use PDO;
 
 class DB
 {
@@ -104,9 +105,6 @@ class DB
         }
         $sth->execute();
         return $sth->fetchAll();
-    }
-    public function lastInsertId() {
-        return $this->pdo->lastInsertId();
     }
 
 }
