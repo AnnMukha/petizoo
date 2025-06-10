@@ -37,7 +37,9 @@ class AdminController extends Controller
 
     public function actionOrders()
     {
-        return $this->render();
+        $orders = \core\Core::get()->db->select('orders', '*', null, 'created_at DESC');
+        $this->template->setParam('orders', $orders);
+        return $this->render('admin/orders');
     }
     public function actionAddproduct()
     {
@@ -185,5 +187,17 @@ class AdminController extends Controller
         $products = \models\Products::GetAll('all');
         $this->template->setParam('products', $products);
         return $this->render('admin/markproducts');
+    }
+    public function actionUpdatestatus()
+    {
+        if ($this->isPost && isset($this->post->order_id, $this->post->status)) {
+            \core\Core::get()->db->update('orders', [
+                'status' => $this->post->status
+            ], ['id' => $this->post->order_id]);
+
+            $_SESSION['info_message'] = 'Статус замовлення оновлено!';
+        }
+
+        return $this->redirect('/admin/orders');
     }
 }

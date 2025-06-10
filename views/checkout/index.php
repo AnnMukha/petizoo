@@ -2,13 +2,25 @@
 /** @var array $items */
 /** @var float $total */
 /** @var bool $isGuest */
+
+$userFullName = '';
+$userPhone = '';
+
+if (!$isGuest && isset($_SESSION['user'])) {
+    $firstname = $_SESSION['user']['firstname'] ?? '';
+    $lastname = $_SESSION['user']['lastname'] ?? '';
+    $userFullName = trim($firstname . ' ' . $lastname);
+    $userPhone = $_SESSION['user']['phone'] ?? '';
+}
 ?>
 
 <link rel="stylesheet" href="/css/cart.css">
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4 text-success fw-bold">Сторінка оформлення замовлення</h2>
-
+    <div class="checkout-title-wrapper text-center my-4">
+        <h2 class="checkout-title">Сторінка оформлення замовлення <span class="text-primary">📦</span></h2>
+        <p class="checkout-subtitle">Будь ласка, перевірте свої дані перед підтвердженням 📝</p>
+    </div>
     <?php if (!empty($_SESSION['error'])): ?>
         <div class="alert alert-danger"><?= $_SESSION['error'] ?></div>
         <?php unset($_SESSION['error']); ?>
@@ -27,14 +39,16 @@
                 <label class="form-label">Ім’я та прізвище *</label>
                 <input type="text" name="full_name" class="form-control" required
                        pattern="^[А-Яа-яІіЇїЄєA-Za-z\s'-]+$"
-                       title="Використовуйте лише літери, апостроф і пробіли.">
+                       title="Використовуйте лише літери, апостроф і пробіли."
+                       value="<?= htmlspecialchars($userFullName) ?>">
                 <div class="invalid-feedback">Введіть коректне ім’я та прізвище (тільки літери та пробіли).</div>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Телефон *</label>
                 <input type="tel" id="phone" name="phone" class="form-control" required
                        pattern="^\+380\d{9}$"
-                       title="Телефон у форматі +380XXXXXXXXX">
+                       title="Телефон у форматі +380XXXXXXXXX"
+                       value="<?= htmlspecialchars($userPhone) ?>">
                 <div class="invalid-feedback">Телефон має бути у форматі +380XXXXXXXXX</div>
             </div>
         </div>
@@ -48,6 +62,7 @@
                 <option value="Укрпошта">Укрпошта</option>
                 <option value="Кур’єром">Кур’єром</option>
             </select>
+            <div class="form-text text-muted">Вартість доставки — за тарифами перевізник*</div>
             <div class="invalid-feedback">Оберіть тип доставки</div>
         </div>
 
@@ -146,3 +161,25 @@
         });
     })();
 </script>
+<style>
+    .checkout-title-wrapper {
+        background: #f0faff;
+        padding: 1.5rem 1rem 1rem;
+        border-radius: 1rem;
+        border: 2px dashed #5bc0de;
+        margin-bottom: 2rem;
+        box-shadow: 0 0 6px rgba(91, 192, 222, 0.15);
+    }
+    .checkout-title {
+        color: #17a2b8;
+        font-size: 2rem;
+        font-weight: 700;
+        font-family: 'Segoe UI', sans-serif;
+        margin-bottom: 0.25rem;
+    }
+    .checkout-subtitle {
+        color: #666;
+        font-size: 1rem;
+        font-style: italic;
+    }
+</style>

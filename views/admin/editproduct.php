@@ -66,11 +66,14 @@ if (!isset($product)) {
     </div>
 
     <!-- Попередній перегляд -->
+    <!-- Попередній перегляд -->
     <div class="col-md-6 border-start ps-4">
         <h4 class="fw-bold mb-3 text-center">Перегляд товару</h4>
         <div class="card">
             <?php if (!empty($product['image'])): ?>
-                <img src="/<?= ltrim($product['image'], '/') ?>" class="card-img-top" alt="Фото товару">
+                <img src="/<?= ltrim($product['image'], '/') ?>"
+                     class="card-img-top preview-img"
+                     alt="Фото товару">
             <?php endif; ?>
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($product['name']) ?></h5>
@@ -85,3 +88,12 @@ if (!isset($product)) {
         </div>
     </div>
 </div>
+<style>
+    .preview-img {
+        max-height: 350px;
+        width: auto;
+        object-fit: contain;
+        margin: 0 auto;
+        padding: 15px;
+    }
+</style>

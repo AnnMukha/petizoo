@@ -290,6 +290,59 @@ $this->Title = '' ;
             margin: 10px auto 0;
             border-radius: 3px;
         }
+        .badge-sale {
+            background-color: #e53935;
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .badge-hit {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: bold;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .product-price-original {
+            text-decoration: line-through;
+            color: #888;
+            font-size: 0.95rem;
+        }
+        .product-price-discount {
+            color: #e53935;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .product-tile {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 100%;
+            padding: 20px 15px;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .popular-scroll {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .product-img {
+            height: 160px;
+            width: 100%;
+            object-fit: contain;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -391,19 +444,39 @@ $this->Title = '' ;
 <section class="container my-0">
     <h3 class="section-title">Популярні товари</h3>
 
-    <div class="popular-scroll d-flex overflow-auto pb-3 gap-4">
+    <div class="popular-scroll">
         <?php if (!empty($popular)): ?>
             <?php foreach ($popular as $item): ?>
-                <div class="position-relative product-tile p-3 flex-shrink-0" style="width: 250px;">
-                    <?php if (!empty($item['is_popular'])): ?>
-                        <span class="position-absolute top-0 end-0 m-2 badge bg-warning text-dark shadow">ХІТ</span>
+                <div class="position-relative product-tile">
+                    <?php if (!empty($item['is_discounted'])): ?>
+                        <span class="position-absolute top-0 start-0 m-2 badge badge-sale shadow">ЗНИЖКА</span>
                     <?php endif; ?>
+
+                    <?php if (!empty($item['is_popular'])): ?>
+                        <span class="position-absolute top-0 end-0 m-2 badge badge-hit shadow">ХІТ</span>
+                    <?php endif; ?>
+
                     <a href="/products/view/<?= (int)$item['id'] ?>" class="text-decoration-none text-dark">
                         <img src="<?= htmlspecialchars($item['image']) ?>" class="img-fluid product-img" alt="<?= htmlspecialchars($item['name']) ?>">
                         <h6 class="mt-3 fw-semibold text-center"><?= htmlspecialchars($item['name']) ?></h6>
                     </a>
-                    <p class="text-teal fw-bold text-center mb-2"><?= htmlspecialchars($item['price']) ?> грн</p>
-                    <button type="button" class="btn btn-petizoo w-100 add-to-cart" data-id="<?= (int)$item['id'] ?>">
+
+                    <?php if (!empty($item['is_discounted'])): ?>
+                        <p class="text-center mb-2">
+                            <span class="product-price-original">
+                                <?= number_format($item['price'], 2) ?> грн
+                            </span><br>
+                            <span class="product-price-discount">
+                                <?= number_format($item['new_price'], 2) ?> грн
+                            </span>
+                        </p>
+                    <?php else: ?>
+                        <p class="text-teal fw-bold text-center mb-2">
+                            <?= htmlspecialchars($item['price']) ?> грн
+                        </p>
+                    <?php endif; ?>
+
+                    <button type="button" class="btn btn-petizoo w-100 add-to-cart mt-auto" data-id="<?= (int)$item['id'] ?>">
                         <i class="bi bi-cart"></i> До кошика
                     </button>
                 </div>

@@ -347,9 +347,9 @@ if (empty($Content))
 
             </ul>
 
-            <form class="d-flex me-3" role="search">
-                <input class="form-control form-control-sm me-2" type="search" placeholder="Пошук..."
-                       aria-label="Search"/>
+            <form class="d-flex me-3" role="search" method="get" action="/products">
+                <input name="search" class="form-control form-control-sm me-2" type="search" placeholder="Пошук..." aria-label="Search"
+                       value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                 <button class="btn btn-outline-success btn-sm" type="submit">🔍</button>
             </form>
 

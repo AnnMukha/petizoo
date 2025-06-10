@@ -8,46 +8,56 @@ use models\Users;
 
 class CartController extends Controller
 {
-    public function actionAdd($params)
+    public function actionAdd()
     {
-        $productId = $params[0] ?? null;
-        if ($productId === null)
-            return $this->redirect('/products/index');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $productId = $_POST['product_id'] ?? null;
 
-        $user = Users::GetCurrentAuthenticatedUser();
-
-        if ($user !== null) {
-            $existing = Core::get()->db->select('cart_items', '*', [
-                'user_id' => $user['id'],
-                'product_id' => $productId
-            ]);
-
-            if (!empty($existing)) {
-                Core::get()->db->update('cart_items', [
-                    'quantity' => $existing[0]['quantity'] + 1
-                ], ['id' => $existing[0]['id']]);
-            } else {
-                Core::get()->db->insert('cart_items', [
-                    'user_id' => $user['id'],
-                    'product_id' => $productId,
-                    'quantity' => 1
-                ]);
+            if (!$productId || !is_numeric($productId)) {
+                return $this->redirect('/products');
             }
 
-            $count = Core::get()->db->performQuery("SELECT SUM(quantity) as total FROM cart_items WHERE user_id = :user_id", [
-                'user_id' => $user['id']
-            ]);
-            $_SESSION['cart_count'] = $count[0]['total'] ?? 0;
+            $user = \models\Users::GetCurrentAuthenticatedUser();
 
-        } else {
-            if (!isset($_SESSION['cart']))
-                $_SESSION['cart'] = [];
+            if ($user !== null) {
+                $existing = \core\Core::get()->db->select('cart_items', '*', [
+                    'user_id' => $user['id'],
+                    'product_id' => $productId
+                ]);
 
-            $_SESSION['cart'][$productId] = ($_SESSION['cart'][$productId] ?? 0) + 1;
-            $_SESSION['cart_count'] = array_sum($_SESSION['cart']);
+                if (!empty($existing)) {
+                    \core\Core::get()->db->update('cart_items', [
+                        'quantity' => $existing[0]['quantity'] + 1
+                    ], ['id' => $existing[0]['id']]);
+                } else {
+                    \core\Core::get()->db->insert('cart_items', [
+                        'user_id' => $user['id'],
+                        'product_id' => $productId,
+                        'quantity' => 1
+                    ]);
+                }
+
+                $count = \core\Core::get()->db->performQuery("
+                SELECT SUM(quantity) as total 
+                FROM cart_items 
+                WHERE user_id = :user_id
+            ", ['user_id' => $user['id']]);
+
+                $_SESSION['cart_count'] = $count[0]['total'] ?? 0;
+
+            } else {
+                // Для неавторизованих — зберігаємо в сесії
+                if (!isset($_SESSION['cart']))
+                    $_SESSION['cart'] = [];
+
+                $_SESSION['cart'][$productId] = ($_SESSION['cart'][$productId] ?? 0) + 1;
+                $_SESSION['cart_count'] = array_sum($_SESSION['cart']);
+            }
+
+            return $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
-        return $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
+        return $this->redirect('/products');
     }
 
     public function actionRemove($params)
@@ -319,4 +329,5 @@ class CartController extends Controller
         $this->template->setParams(['items' => $cartItems]);
         return $this->renderPartial('cart/ajax_cart');
     }
+
 }

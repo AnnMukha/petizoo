@@ -5,7 +5,6 @@ namespace controllers;
 use core\Controller;
 use core\Core;
 use models\Products;
-use core\DB;
 
 class ProductsController extends Controller
 {
@@ -14,6 +13,7 @@ class ProductsController extends Controller
         $animal = $_GET['animal'] ?? 'all';
         $category = $_GET['category'] ?? 'all';
         $subcategory = $_GET['subcategory'] ?? 'all';
+        $search = trim($_GET['search'] ?? '');
 
         $query = "SELECT * FROM products WHERE 1=1";
         $params = [];
@@ -31,6 +31,11 @@ class ProductsController extends Controller
             $params['category'] = $category;
         }
 
+        if (!empty($search)) {
+            $query .= " AND name LIKE :search";
+            $params['search'] = '%' . $search . '%';
+        }
+
         $products = Core::get()->db->performQuery($query, $params);
         $categories = Core::get()->db->select('categories');
         $subcategories = Core::get()->db->select('subcategories');
@@ -42,6 +47,7 @@ class ProductsController extends Controller
             'subcategory' => $subcategory,
             'categories' => $categories,
             'subcategories' => $subcategories,
+            'search' => $search
         ]);
 
         return $this->render('products/index');
@@ -51,10 +57,7 @@ class ProductsController extends Controller
     {
         $products = Products::findByCondition(['is_discounted' => 1]);
 
-        $this->template->setParams([
-            'products' => $products
-        ]);
-
+        $this->template->setParam('products', $products);
         return $this->render('products/sale');
     }
 
@@ -136,10 +139,7 @@ class ProductsController extends Controller
             return $this->redirect('/products');
         }
 
-        $result = Core::get()->db->select('products', '*', [
-            'id' => $productId
-        ]);
-
+        $result = Core::get()->db->select('products', '*', ['id' => $productId]);
         $product = !empty($result) ? $result[0] : null;
 
         if (!$product) {
@@ -147,10 +147,71 @@ class ProductsController extends Controller
             return $this->render('site/404');
         }
 
+        $comments = Core::get()->db->performQuery("SELECT c.*, u.login FROM comments c JOIN users u ON c.user_id = u.id WHERE c.product_id = :pid ORDER BY c.created_at DESC", ['pid' => $productId]);
+
         $this->template->setParams([
-            'product' => $product
+            'product' => $product,
+            'comments' => $comments
         ]);
 
         return $this->render('products/view');
+    }
+
+    public function actionAddcomment()
+    {
+        if (!\models\Users::IsUserLogged()) {
+            $_SESSION['error'] = 'Увійдіть, щоб залишити коментар';
+            return $this->redirect('/users/login');
+        }
+
+        $user = \models\Users::GetCurrentAuthenticatedUser();
+        $productId = $_POST['product_id'] ?? null;
+        $content = trim($_POST['content'] ?? '');
+
+        if ($productId && !empty($content)) {
+            Core::get()->db->insert('comments', [
+                'product_id' => $productId,
+                'user_id' => $user['id'],
+                'comment' => $content
+            ]);
+        }
+
+        return $this->redirect("/products/view/{$productId}");
+    }
+
+    public function actionUpdatecomment()
+    {
+        if (!\models\Users::IsUserLogged()) {
+            $_SESSION['error'] = 'Увійдіть, щоб редагувати коментар';
+            return $this->redirect('/users/login');
+        }
+
+        $user = \models\Users::GetCurrentAuthenticatedUser();
+        $commentId = $_POST['comment_id'] ?? null;
+        $productId = $_POST['product_id'] ?? null;
+        $newContent = trim($_POST['content'] ?? '');
+
+        if (!$commentId || !$productId || empty($newContent)) {
+            $_SESSION['error'] = 'Неправильні дані для оновлення';
+            return $this->redirect("/products/view/{$productId}");
+        }
+
+        $comment = Core::get()->db->select('comments', '*', ['id' => $commentId]);
+
+        if (empty($comment)) {
+            $_SESSION['error'] = 'Коментар не знайдено';
+            return $this->redirect("/products/view/{$productId}");
+        }
+
+        if ((int)$comment[0]['user_id'] === (int)$user['id']) {
+            Core::get()->db->update('comments', [
+                'comment' => $newContent
+            ], ['id' => $commentId]);
+            $_SESSION['success'] = 'Коментар оновлено';
+        } else {
+            $_SESSION['error'] = 'Це не ваш коментар';
+        }
+
+        return $this->redirect("/products/view/{$productId}");
     }
 }

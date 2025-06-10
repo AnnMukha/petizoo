@@ -26,16 +26,31 @@ class Router
         \core\Core::get()->moduleName = $parts[0];
         \core\Core::get()->actionName = $parts[1];
 
-        $controllerClass = 'controllers\\' . ucfirst($parts[0]) . 'Controller';
-        $actionMethod = 'action' . ucfirst($parts[1]);
+        // --- підтримка вкладених контролерів (наприклад: AdminOrdersController) ---
+        $controllerClass = '';
+        $actionMethod = '';
+        $params = [];
+
+        $controllerPrefix = ucfirst($parts[0]);
+        $controllerSuffix = ucfirst($parts[1] ?? 'index');
+
+        // Спроба знайти клас типу AdminOrdersController
+        if (isset($parts[1]) && class_exists('controllers\\' . $controllerPrefix . $controllerSuffix . 'Controller')) {
+            $controllerClass = 'controllers\\' . $controllerPrefix . $controllerSuffix . 'Controller';
+            $actionMethod = 'action' . ucfirst($parts[2] ?? 'index');
+            $params = array_slice($parts, 3);
+        } else {
+            // Звичайний контролер типу SiteController
+            $controllerClass = 'controllers\\' . $controllerPrefix . 'Controller';
+            $actionMethod = 'action' . ucfirst($parts[1]);
+            $params = array_slice($parts, 2);
+        }
 
         if (class_exists($controllerClass)) {
             $controllerObject = new $controllerClass();
             \core\Core::get()->controllerObject = $controllerObject;
 
-            $params = array_slice($parts, 2);
-
-            // Підтримка передачі параметрів з урла (наприклад: /profile/order/6)
+            // Додаткова підтримка для GET-параметра id
             if (!empty($params) && !isset($_GET['id'])) {
                 $_GET['id'] = $params[0];
             }
