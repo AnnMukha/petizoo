@@ -1,0 +1,50 @@
+.info-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 0 30px rgba(0,0,0,0.05);
+}
+
+.info-page h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.info-page h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: #00796b;
+    font-weight: 600;
+}
+
+.info-page p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #444;
+}
+
+.info-page ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.info-page ul li {
+    list-style: disc;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+.info-page .highlight {
+    background-color: #f8f9fa;
+    border-left: 4px solid #00796b;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+}
