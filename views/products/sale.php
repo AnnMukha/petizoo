@@ -44,12 +44,14 @@
                                     'product_id' => $product['id']
                                 ]);
                                 ?>
-                                <button class="btn btn-outline-danger btn-icon shadow-sm toggle-favorite rounded-circle" data-product-id="<?= $product['id'] ?>" title="У вибране">
+                                <button class="btn btn-outline-danger btn-icon shadow-sm toggle-favorite"
+                                        data-product-id="<?= $product['id'] ?>" title="У вибране">
                                     <i class="bi <?= $isFavorite ? 'bi-heart-fill text-danger' : 'bi-heart' ?> fs-5"></i>
                                 </button>
                             <?php else: ?>
                                 <div class="position-relative">
-                                    <button class="btn btn-outline-danger btn-icon shadow-sm btn-disabled-tooltip rounded-circle" data-tooltip="Увійдіть до акаунта, щоб додати в улюблене">
+                                    <button class="btn btn-outline-danger btn-icon shadow-sm btn-disabled-tooltip"
+                                            data-tooltip="Увійдіть до акаунта, щоб додати в улюблене">
                                         <i class="bi bi-heart fs-5"></i>
                                     </button>
                                 </div>
@@ -150,6 +152,7 @@
         font-size: 1.25rem;
         display: inline-flex;
         align-items: center;
+        border-radius: 50%;
         justify-content: center;
         transition: all 0.2s;
     }
@@ -182,5 +185,36 @@
         max-height: 100%;
         object-fit: contain;
         transition: transform 0.3s ease;
+    }
+    .btn-disabled-tooltip {
+        position: relative;
+        opacity: 1;
+        cursor: not-allowed;
+        border: 1px solid #dc3545 !important;
+        background-color: transparent;
+        pointer-events: auto;
+    }
+
+    .btn-disabled-tooltip::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -36px;
+        right: -10px;
+        background-color: #f8d7da;
+        color: #721c24;
+        font-size: 13px;
+        padding: 6px 10px;
+        border-radius: 5px;
+        white-space: nowrap;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(5px);
+        transition: all 0.2s ease, transform 0.2s ease;
+        z-index: 9999;
+    }
+
+    .btn-disabled-tooltip:hover::after {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>

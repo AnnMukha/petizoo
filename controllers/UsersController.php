@@ -50,7 +50,6 @@ class UsersController extends Controller
                 $this->addErrorMessage('Прізвище не вказано');
             if (strlen($this->post->firstname) === 0)
                 $this->addErrorMessage('Ім\'я не вказано');
-
             if (!$this->isErrorMessageExists()) {
                 $hashedPassword = password_hash($this->post->password, PASSWORD_DEFAULT);
                 Users::RegisterUser(

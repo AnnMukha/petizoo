@@ -106,5 +106,19 @@ class DB
         $sth->execute();
         return $sth->fetchAll();
     }
+    public function count($table, $where = null) {
+        $where_string = $this->where($where);
+        $sql = "SELECT COUNT(*) as count FROM {$table} {$where_string}";
+        $sth = $this->pdo->prepare($sql);
+
+        if (is_array($where)) {
+            foreach ($where as $key => $value)
+                $sth->bindValue(":{$key}", $value);
+        }
+
+        $sth->execute();
+        $result = $sth->fetch();
+        return $result['count'] ?? 0;
+    }
 
 }

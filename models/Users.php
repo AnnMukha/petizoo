@@ -37,9 +37,14 @@ class Users extends Model
         Core::get()->session->set('user', [
             'id' => $user['id'],
             'login' => $user['login'],
-            'is_admin' => $user['is_admin'] ?? 0
+            'is_admin' => $user['is_admin'] ?? 0,
+            'firstname' => $user['firstname'] ?? '',
+            'lastname' => $user['lastname'] ?? '',
+            'phone' => $user['phone'] ?? '',
+            'created_at' => $user['created_at'] ?? '',
         ]);
     }
+
     public static function LogoutUser() {
         Core::get()->session->remove('user');
         unset($_SESSION['cart']);

@@ -29,13 +29,19 @@ class Template
     }
     public function getHTML() {
         ob_start();
-        $this->controller = \core\Core::get()->controllerObject;
+
+        $core = \core\Core::get();
+        if (isset($core->controllerObject)) {
+            $this->controller = $core->controllerObject;
+        }
+
         extract($this->paramsArray);
-        include ($this->templateFilePath);
+        include($this->templateFilePath);
         $str = ob_get_contents();
         ob_end_clean();
         return $str;
     }
+
     public function display() {
         echo $this->getHTML();
     }

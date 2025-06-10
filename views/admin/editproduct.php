@@ -66,7 +66,6 @@ if (!isset($product)) {
     </div>
 
     <!-- Попередній перегляд -->
-    <!-- Попередній перегляд -->
     <div class="col-md-6 border-start ps-4">
         <h4 class="fw-bold mb-3 text-center">Перегляд товару</h4>
         <div class="card">
@@ -83,11 +82,71 @@ if (!isset($product)) {
                 <p><strong>Для кого:</strong>
                     <?= $product['is_for'] === 'cat' ? 'Котам' : ($product['is_for'] === 'dog' ? 'Собакам' : 'Котам і собакам') ?>
                 </p>
-                <p><strong>Підкатегорія ID:</strong> <?= $product['subcategory_id'] ?></p>
+                <p><strong>Підкатегорія:</strong>
+                    <?php
+                    foreach ($subcategories as $sub) {
+                        if ($sub['id'] == $product['subcategory_id']) {
+                            echo htmlspecialchars($sub['name']);
+                            break;
+                        }
+                    }
+                    ?>
+                </p>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nameInput = document.querySelector('input[name="name"]');
+        const descriptionInput = document.querySelector('textarea[name="description"]');
+        const priceInput = document.querySelector('input[name="price"]');
+        const stockInput = document.querySelector('input[name="stock"]');
+        const isForSelect = document.querySelector('select[name="is_for"]');
+
+        const titleElem = document.querySelector('.card-title');
+        const descElem = document.querySelector('.card-text');
+        const priceElem = document.getElementById('preview-price');
+        const stockElem = document.getElementById('preview-stock');
+        const forElem = document.getElementById('preview-for');
+
+        function escapeHTML(str) {
+            return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function updatePreview() {
+            const name = nameInput.value.trim();
+            const description = descriptionInput.value.trim();
+            const price = parseFloat(priceInput.value || 0).toFixed(2);
+            const stock = stockInput.value || 0;
+            const isFor = isForSelect.value;
+
+            let forText = 'Котам і собакам';
+            if (isFor === 'cat') forText = 'Котам';
+            else if (isFor === 'dog') forText = 'Собакам';
+
+            titleElem.textContent = name || 'Назва товару';
+            descElem.innerHTML = description
+                ? escapeHTML(description).replace(/\n/g, '<br>')
+                : 'Опис відсутній';
+            priceElem.innerHTML = `<strong>Ціна:</strong> ${price} грн`;
+            stockElem.innerHTML = `<strong>Кількість:</strong> ${stock}`;
+            forElem.innerHTML = `<strong>Для кого:</strong> ${forText}`;
+        }
+
+        [nameInput, descriptionInput, priceInput, stockInput, isForSelect].forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+        descriptionInput.addEventListener('change', updatePreview);
+        isForSelect.addEventListener('change', updatePreview);
+
+        updatePreview();
+    });
+</script>
 <style>
     .preview-img {
         max-height: 350px;

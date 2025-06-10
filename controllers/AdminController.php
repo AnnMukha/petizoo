@@ -23,7 +23,30 @@ class AdminController extends Controller
     }
     public function actionDashboard()
     {
-        return $this->render();
+        $db = \core\Core::get()->db;
+
+        $totalProducts = $db->count('products');
+        $totalOrders = $db->count('orders');
+        $totalUsers = $db->count('users');
+        $discountedProducts = $db->count('products', ['is_discounted' => 1]);
+        $popularProducts = $db->count('products', ['is_popular' => 1]);
+
+        $orderStatuses = ['Опрацьовується', 'Відправлено', 'Доставлено', 'Скасовано'];
+        $orderStatusCounts = [];
+        foreach ($orderStatuses as $status) {
+            $orderStatusCounts[$status] = $db->count('orders', ['status' => $status]);
+        }
+
+        $this->template->setParams([
+            'totalProducts' => $totalProducts,
+            'totalOrders' => $totalOrders,
+            'totalUsers' => $totalUsers,
+            'discountedProducts' => $discountedProducts,
+            'popularProducts' => $popularProducts,
+            'orderStatusCounts' => $orderStatusCounts
+        ]);
+
+        return $this->render('admin/dashboard');
     }
 
     public function actionProducts()
@@ -44,7 +67,6 @@ class AdminController extends Controller
     public function actionAddproduct()
     {
         $this->checkAdmin();
-
         $product = [
             'name' => '',
             'description' => '',
@@ -54,7 +76,6 @@ class AdminController extends Controller
             'is_for' => 'cat',
             'image' => ''
         ];
-
         if ($this->isPost) {
             $product['name'] = $this->post->name;
             $product['description'] = $this->post->description;
@@ -62,7 +83,6 @@ class AdminController extends Controller
             $product['stock'] = (int)$this->post->stock;
             $product['subcategory_id'] = $this->post->subcategory_id;
             $product['is_for'] = $this->post->is_for;
-
             if (!empty($_FILES['image']['tmp_name'])) {
                 $uploadDir = 'uploads/products/';
                 if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
@@ -70,20 +90,14 @@ class AdminController extends Controller
                 move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $filename);
                 $product['image'] = $uploadDir . $filename;
             }
-
             \models\Products::add($product);
             return $this->redirect('/admin/products');
         }
-
-        // ✅ Завантаження підкатегорій
         $subcategories = \models\Subcategory::getAll();
-
-        // ✅ Передача і $product, і $subcategories
         $this->template->setParams([
             'product' => $product,
             'subcategories' => $subcategories
         ]);
-
         return $this->render('admin/addproduct');
     }
 

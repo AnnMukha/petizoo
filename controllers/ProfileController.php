@@ -80,55 +80,56 @@ class ProfileController extends Controller
 
     public function actionSettings()
     {
-        if (!Users::IsUserLogged())
+        if (!Users::IsUserLogged()) {
             return $this->redirect('/users/login');
-
+        }
         $user = Users::GetCurrentAuthenticatedUser();
         $errors = [];
         $success = null;
-
         if ($this->isPost) {
-            $field = $this->post->field;
-            $value = trim($this->post->value);
+            $field = $this->post->field ?? null;
+            $value = trim($this->post->value ?? '');
             $updatedFields = [];
-
             switch ($field) {
                 case 'firstname':
-                    if (empty($value))
+                    if ($value === '') {
                         $errors[] = 'Ім’я не може бути порожнім';
-                    else
+                    } else {
                         $updatedFields['firstname'] = $value;
+                    }
                     break;
-
                 case 'lastname':
-                    if (empty($value))
+                    if ($value === '') {
                         $errors[] = 'Прізвище не може бути порожнім';
-                    else
+                    } else {
                         $updatedFields['lastname'] = $value;
+                    }
                     break;
-
                 case 'email':
-                    if (!filter_var($value, FILTER_VALIDATE_EMAIL))
+                    if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
                         $errors[] = 'Некоректний email';
-                    else
+                    } else {
                         $updatedFields['login'] = $value;
+                    }
                     break;
-
                 case 'phone':
-                    if (!preg_match('/^\\+380\\d{9}$/', $value))
+                    if (!preg_match('/^\+380\d{9}$/', $value)) {
                         $errors[] = 'Телефон має бути у форматі +380XXXXXXXXX';
-                    else
+                    } else {
                         $updatedFields['phone'] = $value;
+                    }
                     break;
-
                 case 'password':
-                    if (!empty($value))
-                        $updatedFields['password'] = password_hash($value, PASSWORD_DEFAULT);
-                    else
+                    if ($value === '') {
                         $errors[] = 'Пароль не може бути порожнім';
+                    } else {
+                        $updatedFields['password'] = password_hash($value, PASSWORD_DEFAULT);
+                    }
+                    break;
+                default:
+                    $errors[] = 'Невідоме поле для оновлення.';
                     break;
             }
-
             if (empty($errors) && !empty($updatedFields)) {
                 Core::get()->db->update('users', $updatedFields, ['id' => $user['id']]);
                 $user = Core::get()->db->select('users', '*', ['id' => $user['id']])[0];
@@ -136,7 +137,6 @@ class ProfileController extends Controller
                 $success = 'Зміни успішно збережено!';
             }
         }
-
         return $this->render([
             'user' => $user,
             'errors' => $errors,

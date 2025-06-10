@@ -194,9 +194,7 @@ if (empty($Content))
                                     </div>
                                     <ul class="list-unstyled mt-2 ps-3 small">
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=5">
-                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та кліщів</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=6">
-                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a></li>
+                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та кліщі</a></li>
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=7">
                                                 <i class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=cat&subcategory=8">
@@ -264,8 +262,6 @@ if (empty($Content))
                                     <ul class="list-unstyled mt-2 ps-3 small">
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=5">
                                                 <i class="bi bi-chevron-right me-1 text-teal"></i>Від бліх та кліщів</a></li>
-                                        <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=6">
-                                                <i class="bi bi-chevron-right me-1 text-teal"></i>Від кліщів</a></li>
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=7">
                                                 <i class="bi bi-chevron-right me-1 text-teal"></i>Вітаміни</a></li>
                                         <li><a class="text-decoration-none text-dark" href="/products?animal=dog&subcategory=8">
@@ -415,9 +411,9 @@ if (empty($Content))
             <div class="col mb-3">
                 <h6>Допомога</h6>
                 <ul class="list-unstyled">
-                    <li><a href="#">Доставка</a></li>
-                    <li><a href="#">Оплата</a></li>
-                    <li><a href="#">Повернення</a></li>
+                    <li><a href="/info/delivery">Доставка</a></li>
+                    <li><a href="/info/payment">Оплата</a></li>
+                    <li><a href="/info/return">Повернення</a></li>
                 </ul>
             </div>
             <div class="col mb-3">

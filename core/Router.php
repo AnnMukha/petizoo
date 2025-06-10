@@ -26,7 +26,6 @@ class Router
         \core\Core::get()->moduleName = $parts[0];
         \core\Core::get()->actionName = $parts[1];
 
-        // --- підтримка вкладених контролерів (наприклад: AdminOrdersController) ---
         $controllerClass = '';
         $actionMethod = '';
         $params = [];
@@ -34,13 +33,13 @@ class Router
         $controllerPrefix = ucfirst($parts[0]);
         $controllerSuffix = ucfirst($parts[1] ?? 'index');
 
-        // Спроба знайти клас типу AdminOrdersController
+        // Спроба знайти вкладений контролер
         if (isset($parts[1]) && class_exists('controllers\\' . $controllerPrefix . $controllerSuffix . 'Controller')) {
             $controllerClass = 'controllers\\' . $controllerPrefix . $controllerSuffix . 'Controller';
             $actionMethod = 'action' . ucfirst($parts[2] ?? 'index');
             $params = array_slice($parts, 3);
         } else {
-            // Звичайний контролер типу SiteController
+            // Стандартний контролер
             $controllerClass = 'controllers\\' . $controllerPrefix . 'Controller';
             $actionMethod = 'action' . ucfirst($parts[1]);
             $params = array_slice($parts, 2);
@@ -50,27 +49,33 @@ class Router
             $controllerObject = new $controllerClass();
             \core\Core::get()->controllerObject = $controllerObject;
 
-            // Додаткова підтримка для GET-параметра id
             if (!empty($params) && !isset($_GET['id'])) {
                 $_GET['id'] = $params[0];
             }
 
             if (method_exists($controllerObject, $actionMethod)) {
                 return $controllerObject->$actionMethod($params);
-            } else {
-                $this->error(404);
             }
-        } else {
-            $this->error(404);
         }
+
+        $this->error(404);
     }
 
     public function error($code)
     {
         http_response_code($code);
-        if ($code == 404) {
-            echo '<h1>404 Not Found</h1>';
+        if ($code === 404) {
+            if (class_exists('controllers\\ErrorController')) {
+                $controller = new \controllers\ErrorController();
+                $controller->actionNotFound();
+            } else {
+                echo '<h1>404 - Сторінка не знайдена</h1>';
+            }
+        } else {
+            echo "<h1>Помилка {$code}</h1>";
         }
+
+        exit;
     }
 
     public function done()

@@ -343,6 +343,25 @@ $this->Title = '' ;
             border-radius: 10px;
             margin-bottom: 12px;
         }
+        .product-row {
+            display: flex;
+            gap: 16px; /* Відступ між товарами */
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scroll-snap-type: x mandatory; /* Опційно: для плавного скролу */
+        }
+        .product-tile {
+            flex: 0 0 auto; /* Щоб не стискалося і не переносилося */
+            scroll-snap-align: start; /* Опційно */
+        }
+        .product-row::-webkit-scrollbar {
+            display: none;
+        }
+        .product-row {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body>
@@ -444,10 +463,10 @@ $this->Title = '' ;
 <section class="container my-0">
     <h3 class="section-title">Популярні товари</h3>
 
-    <div class="popular-scroll">
+    <div class="popular-scroll d-flex gap-3 overflow-auto pb-3">
         <?php if (!empty($popular)): ?>
             <?php foreach ($popular as $item): ?>
-                <div class="position-relative product-tile">
+                <div class="position-relative product-tile d-flex flex-column">
                     <?php if (!empty($item['is_discounted'])): ?>
                         <span class="position-absolute top-0 start-0 m-2 badge badge-sale shadow">ЗНИЖКА</span>
                     <?php endif; ?>
@@ -461,20 +480,20 @@ $this->Title = '' ;
                         <h6 class="mt-3 fw-semibold text-center"><?= htmlspecialchars($item['name']) ?></h6>
                     </a>
 
-                    <?php if (!empty($item['is_discounted'])): ?>
-                        <p class="text-center mb-2">
-                            <span class="product-price-original">
-                                <?= number_format($item['price'], 2) ?> грн
-                            </span><br>
-                            <span class="product-price-discount">
-                                <?= number_format($item['new_price'], 2) ?> грн
+                    <div class="text-center mb-2">
+                        <?php if (!empty($item['is_discounted'])): ?>
+                            <span class="product-price-original d-block text-muted text-decoration-line-through">
+                                <?= number_format((float)$item['price'], 2) ?> грн
                             </span>
-                        </p>
-                    <?php else: ?>
-                        <p class="text-teal fw-bold text-center mb-2">
-                            <?= htmlspecialchars($item['price']) ?> грн
-                        </p>
-                    <?php endif; ?>
+                            <span class="product-price-discount fw-bold text-danger">
+                                <?= number_format((float)$item['new_price'], 2) ?> грн
+                            </span>
+                        <?php else: ?>
+                            <span class="text-teal fw-bold">
+                                <?= number_format((float)$item['price'], 2) ?> грн
+                            </span>
+                        <?php endif; ?>
+                    </div>
 
                     <button type="button" class="btn btn-petizoo w-100 add-to-cart mt-auto" data-id="<?= (int)$item['id'] ?>">
                         <i class="bi bi-cart"></i> До кошика
