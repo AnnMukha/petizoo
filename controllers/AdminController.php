@@ -137,7 +137,6 @@ class AdminController extends Controller
 
         $subcategories = \models\Subcategory::getAll();
 
-        // ✅ Ось це важливо — передаємо параметри у шаблон
         $this->template->setParams([
             'product' => $product,
             'subcategories' => $subcategories
@@ -182,14 +181,12 @@ class AdminController extends Controller
                     'new_price' => null
                 ], ['id' => $id]);
             } else {
-                // Якщо is_discounted залишився 1, але ціна не змінилась/невалідна — лише популярне
                 \models\Products::update([
                     'is_popular' => $isPopular
                 ], ['id' => $id]);
             }
         }
 
-        // Після збереження — лишаємося на цій самій сторінці
         $updatedProducts = \models\Products::GetAll('all');
         $this->template->setParam('products', $updatedProducts);
         return $this->render('admin/markproducts');

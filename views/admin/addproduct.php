@@ -2,11 +2,10 @@
 /** @var array $subcategories */
 /** @var array $product */
 
-$product = $product ?? []; // Безпечне значення за замовчуванням
+$product = $product ?? [];
 ?>
 
 <div class="row w-100">
-    <!-- Форма додавання -->
     <div class="col-md-6">
         <h2 class="mb-4 fw-bold text-center">Додавання товару</h2>
         <form method="post" enctype="multipart/form-data" class="w-100" id="productForm">
@@ -63,7 +62,6 @@ $product = $product ?? []; // Безпечне значення за замов�
         </form>
     </div>
 
-    <!-- Попередній перегляд -->
     <div class="col-md-6 border-start ps-4">
         <h4 class="fw-bold mb-3 text-center">Попередній перегляд</h4>
         <div class="card">
@@ -85,8 +83,6 @@ $product = $product ?? []; // Безпечне значення за замов�
         </div>
     </div>
 </div>
-
-<!-- Скрипт для оновлення перегляду -->
 <script>
     function updatePreview() {
         const form = document.forms['productForm'];

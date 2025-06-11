@@ -84,7 +84,6 @@
     </div>
 </div>
 
-<!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx1 = document.getElementById('productChart').getContext('2d');

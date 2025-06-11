@@ -46,7 +46,6 @@ class CartController extends Controller
                 $_SESSION['cart_count'] = $count[0]['total'] ?? 0;
 
             } else {
-                // Для неавторизованих — зберігаємо в сесії
                 if (!isset($_SESSION['cart']))
                     $_SESSION['cart'] = [];
 
@@ -231,7 +230,6 @@ class CartController extends Controller
     {
         $user = \models\Users::GetCurrentAuthenticatedUser();
 
-        // 🔴 Обробка видалення товару
         if (isset($_POST['remove'])) {
             $productId = $_POST['remove'];
 
@@ -255,7 +253,6 @@ class CartController extends Controller
             return $this->redirect('/cart/index');
         }
 
-        // 🔵 Оновлення кількості товарів
         if (isset($_POST['quantities']) && is_array($_POST['quantities'])) {
             foreach ($_POST['quantities'] as $productId => $newQuantity) {
                 $product = Core::get()->db->select('products', '*', ['id' => $productId])[0] ?? null;
@@ -289,7 +286,6 @@ class CartController extends Controller
             }
         }
 
-        // 🔄 Переобчислення лічильника
         $_SESSION['cart_count'] = $user !== null
             ? (Core::get()->db->performQuery(
                 "SELECT SUM(quantity) as total FROM cart_items WHERE user_id = :user_id",

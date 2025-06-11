@@ -161,7 +161,6 @@ if (empty($Content))
                     <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Котам</a>
                     <div class="dropdown-menu p-3" style="min-width: 1000px; padding: 28px;">
                         <div class="row g-3">
-                            <!-- Харчування -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center">
@@ -184,8 +183,6 @@ if (empty($Content))
                                     </ul>
                                 </div>
                             </div>
-
-                            <!-- Здоров'я та гігієна -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center">
@@ -204,8 +201,6 @@ if (empty($Content))
                                     </ul>
                                 </div>
                             </div>
-
-                            <!-- Прогулянка та дозвілля -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center">
@@ -253,7 +248,6 @@ if (empty($Content))
                                     </ul>
                                 </div>
                             </div>
-                            <!-- Здоров’я та гігієна -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center"><i class="bi bi-capsule-pill fs-2 text-teal"></i>
@@ -271,7 +265,6 @@ if (empty($Content))
                                     </ul>
                                 </div>
                             </div>
-                            <!-- Прогулянка та дозвілля -->
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded shadow-sm h-100">
                                     <div class="text-center"><i class="bi bi-balloon-heart fs-2 text-teal"></i>
@@ -306,7 +299,6 @@ if (empty($Content))
                     <div class="dropdown-menu p-3" aria-labelledby="contactDropdown"
                          style="min-width: 700px; border-radius: 10px;">
                         <div class="row row-cols-1 row-cols-md-3 g-3">
-                            <!-- Телефони -->
                             <div class="col">
                                 <div class="bg-light rounded shadow-sm p-3 h-100">
                                     <h6 class="fw-semibold mb-2 text-teal">Консультація:</h6>
@@ -319,7 +311,6 @@ if (empty($Content))
                                 </div>
                             </div>
 
-                            <!-- Графік роботи -->
                             <div class="col">
                                 <div class="bg-light rounded shadow-sm p-3 h-100">
                                     <h6 class="fw-semibold mb-2 text-teal">Графік роботи:</h6>
@@ -328,7 +319,6 @@ if (empty($Content))
                                 </div>
                             </div>
 
-                            <!-- Email -->
                             <div class="col">
                                 <div class="bg-light rounded shadow-sm p-3 h-100">
                                     <h6 class="fw-semibold mb-2 text-teal">Напишіть нам:</h6>

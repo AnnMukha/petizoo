@@ -162,9 +162,16 @@ $this->Title = '' ;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
             text-align: center;
-            height: 100%;
             padding: 20px 15px;
-            min-width: 230px;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            min-height: 380px; /* ✅ Гарантована висота всіх карток */
+        }
+        .btn.add-to-cart {
+            margin-top: auto; /* ✅ притискає кнопку донизу */
         }
         .product-tile:hover {
             transform: translateY(-4px);
@@ -175,9 +182,9 @@ $this->Title = '' ;
             font-size: 15px;
             margin-bottom: 6px;
             color: #333;
-            height: 38px;
-            overflow: hidden;
+            min-height: 38px; /* ✅ Вирівнює блоки з назвою */
             line-height: 1.2;
+            overflow: hidden;
         }
         .product-tile p {
             font-size: 15px;
@@ -194,7 +201,6 @@ $this->Title = '' ;
             border-radius: 10px;
             margin-bottom: 12px;
         }
-
         /* ========================
            8. Кнопки
         =========================== */
@@ -412,7 +418,6 @@ $this->Title = '' ;
     </div>
 
     <div class="row g-4">
-        <!-- Харчування -->
         <div class="col-md-4">
             <div class="category-box bg-food position-relative">
                 <a href="/products?animal=both&category=1" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
@@ -426,8 +431,6 @@ $this->Title = '' ;
                 </ul>
             </div>
         </div>
-
-        <!-- Ветеринарія -->
         <div class="col-md-4">
             <div class="category-box bg-health position-relative">
                 <a href="/products?animal=both&category=2" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
@@ -441,8 +444,6 @@ $this->Title = '' ;
                 </ul>
             </div>
         </div>
-
-        <!-- Прогулянка -->
         <div class="col-md-4">
             <div class="category-box bg-play position-relative">
                 <a href="/products?animal=both&category=3" class="stretched-link position-absolute top-0 start-0 w-100 h-100" style="z-index:1;"></a>
@@ -504,8 +505,6 @@ $this->Title = '' ;
             <p class="text-center text-muted">Наразі немає популярних товарів</p>
         <?php endif; ?>
     </div>
-
-    <!-- Кнопка до каталогу -->
     <div class="text-center mt-4">
         <a href="/products/index" class="btn btn-outline-teal rounded-pill px-5 py-2 fw-semibold shadow-sm">
             <i class="bi bi-grid-3x3-gap me-1"></i> Переглянути весь каталог

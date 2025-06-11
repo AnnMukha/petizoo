@@ -12,7 +12,7 @@
 <table class="table table-bordered table-hover align-middle">
     <thead class="table-light">
     <tr>
-        <th>№</th> <!-- Замість ID -->
+        <th>№</th>
         <th>Назва</th>
         <th>Ціна</th>
         <th>Категорія</th>
@@ -25,7 +25,7 @@
         <?php $i = 1; ?>
         <?php foreach ($products as $product): ?>
             <tr>
-                <td><?= $i++ ?></td> <!-- Порядковий номер -->
+                <td><?= $i++ ?></td>
                 <td><?= htmlspecialchars($product['name']) ?></td>
                 <td><?= number_format($product['price'], 2) ?> грн</td>
                 <td><?= \models\Subcategory::getById($product['subcategory_id'])['name'] ?? '—' ?></td>

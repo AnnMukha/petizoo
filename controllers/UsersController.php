@@ -51,7 +51,6 @@ class UsersController extends Controller
             $lastname = trim($this->post->lastname ?? '');
             $firstname = trim($this->post->firstname ?? '');
 
-            // Валідація полів
             if ($login === '') {
                 $errors[] = 'Логін не вказано';
             } elseif (!filter_var($login, FILTER_VALIDATE_EMAIL)) {
@@ -61,7 +60,6 @@ class UsersController extends Controller
             if ($password === '') {
                 $errors[] = 'Пароль не вказано';
             } else {
-                // Перевірка складності пароля (мінімум 8 символів, букви + цифри + спецсимвол)
                 if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$/', $password)) {
                     $errors[] = 'Пароль має містити мінімум 8 символів, включно з літерами, цифрами та спеціальними символами';
                 }
@@ -83,7 +81,6 @@ class UsersController extends Controller
                 $errors[] = 'Ім\'я не вказано';
             }
 
-            // Перевірка унікальності логіна
             $user = Users::FindByLogin($login);
             if (!empty($user)) {
                 $errors[] = 'Користувач із таким логіном вже існує';
@@ -93,7 +90,6 @@ class UsersController extends Controller
                 return $this->render(['errors' => $errors]);
             }
 
-            // Реєстрація користувача
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             Users::RegisterUser($login, $hashedPassword, $lastname, $firstname);
 
@@ -111,7 +107,7 @@ class UsersController extends Controller
     {
         Users::LogoutUser();
         unset($_SESSION['cart']);
-        unset($_SESSION['cart_count']); // 🔄 Очистити лічильник кошика
+        unset($_SESSION['cart_count']);
 
         return $this->redirect('/users/login');
     }

@@ -12,7 +12,6 @@
     </div>
 
     <div class="row g-4">
-        <!-- Сайдбар фільтр -->
         <div class="col-md-3">
             <form method="get" class="bg-white shadow-sm rounded-4 p-4 border border-primary-subtle">
                 <h5 class="fw-bold mb-3 text-primary">🔍 Фільтри</h5>
