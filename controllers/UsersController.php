@@ -13,53 +13,91 @@ class UsersController extends Controller
             return $this->redirect('/');
         }
 
+        $error_message = '';
+
         if ($this->isPost) {
-            $user = Users::FindByLoginAndPassword($this->post->login, $this->post->password);
+            $login = trim($this->post->login ?? '');
+            $password = $this->post->password ?? '';
 
-            if (!empty($user)) {
-                Users::LoginUser($user);
-
-                // 🔐 Перевірка чи це адмін
-                if ($user['login'] === 'admin@petizoo.ua') {
-                    return $this->redirect('/admin/dashboard');
-                } else {
-                    return $this->redirect('/');
-                }
+            if ($login === '' || $password === '') {
+                $error_message = 'Будь ласка, заповніть всі поля';
             } else {
-                $this->addErrorMessage('Неправильний логін та/або пароль');
+                $user = Users::FindByLoginAndPassword($login, $password);
+
+                if (!empty($user)) {
+                    Users::LoginUser($user);
+
+                    if ($user['login'] === 'admin@petizoo.ua') {
+                        return $this->redirect('/admin/dashboard');
+                    } else {
+                        return $this->redirect('/');
+                    }
+                } else {
+                    $error_message = 'Неправильний логін та/або пароль';
+                }
             }
         }
-        return $this->render();
+
+        return $this->render(['error_message' => $error_message]);
     }
 
     public function actionRegister() {
         if ($this->isPost) {
-            $user = Users::FindByLogin($this->post->login);
+            $errors = [];
+
+            $login = trim($this->post->login ?? '');
+            $password = $this->post->password ?? '';
+            $password_confirm = $this->post->password_confirm ?? '';
+            $lastname = trim($this->post->lastname ?? '');
+            $firstname = trim($this->post->firstname ?? '');
+
+            // Валідація полів
+            if ($login === '') {
+                $errors[] = 'Логін не вказано';
+            } elseif (!filter_var($login, FILTER_VALIDATE_EMAIL)) {
+                $errors[] = 'Введіть коректний email';
+            }
+
+            if ($password === '') {
+                $errors[] = 'Пароль не вказано';
+            } else {
+                // Перевірка складності пароля (мінімум 8 символів, букви + цифри + спецсимвол)
+                if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$/', $password)) {
+                    $errors[] = 'Пароль має містити мінімум 8 символів, включно з літерами, цифрами та спеціальними символами';
+                }
+            }
+
+            if ($password_confirm === '') {
+                $errors[] = 'Пароль (ще раз) не вказано';
+            }
+
+            if ($password !== $password_confirm) {
+                $errors[] = 'Паролі не співпадають';
+            }
+
+            if ($lastname === '') {
+                $errors[] = 'Прізвище не вказано';
+            }
+
+            if ($firstname === '') {
+                $errors[] = 'Ім\'я не вказано';
+            }
+
+            // Перевірка унікальності логіна
+            $user = Users::FindByLogin($login);
             if (!empty($user)) {
-                $this->addErrorMessage('Користувач із таким логіном вже існує');
+                $errors[] = 'Користувач із таким логіном вже існує';
             }
-            if (strlen($this->post->login) === 0)
-                $this->addErrorMessage('Логін не вказано');
-            if (strlen($this->post->password) === 0)
-                $this->addErrorMessage('Пароль не вказано');
-            if (strlen($this->post->password2) === 0)
-                $this->addErrorMessage('Пароль (ще раз) не вказано');
-            if ($this->post->password != $this->post->password2)
-                $this->addErrorMessage('Паролі не співпадають');
-            if (strlen($this->post->lastname) === 0)
-                $this->addErrorMessage('Прізвище не вказано');
-            if (strlen($this->post->firstname) === 0)
-                $this->addErrorMessage('Ім\'я не вказано');
-            if (!$this->isErrorMessageExists()) {
-                $hashedPassword = password_hash($this->post->password, PASSWORD_DEFAULT);
-                Users::RegisterUser(
-                    $this->post->login,
-                    $hashedPassword,
-                    $this->post->lastname,
-                    $this->post->firstname
-                );
-                return $this->redirect('/users/registersuccess');
+
+            if (!empty($errors)) {
+                return $this->render(['errors' => $errors]);
             }
+
+            // Реєстрація користувача
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            Users::RegisterUser($login, $hashedPassword, $lastname, $firstname);
+
+            return $this->redirect('/users/registersuccess');
         }
         return $this->render();
     }

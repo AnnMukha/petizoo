@@ -10,7 +10,7 @@ class Core
     public $router;
     public $template;
     public $db;
-    public ?Controller $controllerObject = null;
+    public Controller $controllerObject;
     private static $instance;
     public $session;
     private function __construct(){
