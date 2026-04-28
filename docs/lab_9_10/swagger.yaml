@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: Petizoo AJAX API
+  version: 1.0.0
+  description: |
+    Swagger-опис двох реальних AJAX-ендпоінтів проєкту Petizoo.
+servers:
+  - url: http://localhost/petizoo
+    description: Local MAMP environment
+paths:
+  /cart/ajaxadd/{productId}:
+    post:
+      tags:
+        - Cart
+      summary: Add product to cart using AJAX
+      description: |
+        Додає 1 одиницю товару до кошика. Для авторизованого користувача
+        дані зберігаються в таблиці `cart_items`, для гостя - у PHP session.
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          description: Product identifier
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Product added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartAjaxAddResponse'
+              examples:
+                success:
+                  value:
+                    status: success
+                    count: 3
+        '400':
+          description: Invalid product identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid:
+                  value:
+                    status: error
+                    message: Invalid product
+  /products/favoriteajax:
+    post:
+      tags:
+        - Favorites
+      summary: Toggle product in favorites using AJAX
+      description: |
+        Додає товар до обраного або видаляє його з обраного для
+        авторизованого користувача.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - product_id
+              properties:
+                product_id:
+                  type: integer
+                  minimum: 1
+                  description: Product identifier
+      responses:
+        '200':
+          description: Favorite state changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteAjaxResponse'
+              examples:
+                added:
+                  value:
+                    status: added
+                removed:
+                  value:
+                    status: removed
+                unauthorized:
+                  value:
+                    status: unauthorized
+                invalid:
+                  value:
+                    status: error
+components:
+  schemas:
+    CartAjaxAddResponse:
+      type: object
+      required:
+        - status
+        - count
+      properties:
+        status:
+          type: string
+          example: success
+        count:
+          type: integer
+          example: 3
+    FavoriteAjaxResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - added
+            - removed
+            - unauthorized
+            - error
+    ErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Invalid product

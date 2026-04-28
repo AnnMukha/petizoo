@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "Petizoo Lab 9-10 API Collection",
+    "_postman_id": "1d31c9e0-1a6b-4c6d-8f0e-9c18fb52e871",
+    "description": "Postman collection for two AJAX endpoints of the Petizoo project.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Cart - AJAX Add Product",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/cart/ajaxadd/{{productId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "cart",
+            "ajaxadd",
+            "{{productId}}"
+          ]
+        },
+        "description": "Adds one product item to the cart. Works for both guest and authenticated users."
+      },
+      "response": [
+        {
+          "name": "Success Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/ajaxadd/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cart",
+                "ajaxadd",
+                "{{productId}}"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"status\": \"success\",\n  \"cartCount\": 3\n}"
+        }
+      ]
+    },
+    {
+      "name": "Favorites - Toggle Favorite",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "product_id",
+              "value": "{{productId}}",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/products/favoriteajax",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "favoriteajax"
+          ]
+        },
+        "description": "Adds product to favorites or removes it from favorites for an authenticated user."
+      },
+      "response": [
+        {
+          "name": "Added Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "product_id",
+                  "value": "{{productId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/favoriteajax",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "favoriteajax"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"status\": \"added\"\n}"
+        },
+        {
+          "name": "Removed Example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "product_id",
+                  "value": "{{productId}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/favoriteajax",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "favoriteajax"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"status\": \"removed\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost/petizoo"
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    }
+  ]
+}
